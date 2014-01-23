@@ -126,9 +126,13 @@ sub parse_char_string ($$$) {
         } elsif ($data =~ s/^\x0A\x0A+//) {
             pop @open if $open[-1]->local_name eq 'p';
             $data = "\x0A" . $data;
+        } elsif ($data =~ s/^\x0A\z//) {
+            #
         } elsif ($data =~ s/^([^'<\{\}\[\]\x0A]+)// or $data =~ s/^(.)//s) {
             $insert_p->() unless $1 eq "\x0A";
-            $open[-1]->manakai_append_text ($1);
+            $open[-1]->manakai_append_text ($1)
+                if $1 ne "\x0A" or
+                   $CanContainPhrasing->{$open[-1]->local_name};
         }
     }
 } # parse_char_string
