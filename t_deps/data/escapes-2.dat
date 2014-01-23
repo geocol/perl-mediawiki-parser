@@ -1,0 +1,47 @@
+#data
+ <nowiki>abvc
+[[aaa]]
+ssss
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw nowiki>
+|       pre=""
+|       "abvc
+| [[aaa]]
+| ssss"
+
+#data
+ <nowiki>abc</nowiki>aaaa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw nowiki>
+|       pre=""
+|       "abc"
+|     <p>
+|       "aaaa"
+
+#data
+ <nowiki>abc
+bbb
+axx</nowiki>aaaa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw nowiki>
+|       pre=""
+|       "abc
+| bbb
+| axx"
+|     <p>
+|       "aaaa"

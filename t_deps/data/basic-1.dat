@@ -74,3 +74,73 @@ Q&A
 |   <body>
 |     <p>
 |       "<hoge>"
+
+#data
+ abc
+ 
+ xx
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <pre>
+|       "abc
+| 
+| xx"
+
+#data
+   
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <pre>
+|       "  "
+
+#data
+   a
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <pre>
+|       "  a"
+
+#data
+   a
+* abc
+ xx
+ab
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <pre>
+|       "  a"
+|     <ul>
+|       <li>
+|         "abc"
+|     <pre>
+|       "xx"
+|     <p>
+|       "ab"
+
+#data
+ [[aa]]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <pre>
+|       <mw link>
+|         "aa"
