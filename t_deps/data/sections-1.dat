@@ -1,0 +1,23 @@
+#data
+== abc ==
+afe
+aa
+== xytaa==
+aa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <section>
+|       <h1>
+|         "abc"
+|       <p>
+|         "afe
+aa"
+|     <section>
+|       <h1>
+|         "xytaa"
+|       <p>
+|         "aa"

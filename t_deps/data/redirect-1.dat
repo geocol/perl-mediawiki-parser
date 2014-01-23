@@ -1,0 +1,19 @@
+#data
+| #REDIRECT [[abc def]]
+#document
+| <html>
+|   mw redirect="abc def"
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+
+#data
+| #REDIRECT [[abc def#aaa&amp]]
+#document
+| <html>
+|   mw redirect="abc def#aaa&amp"
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>

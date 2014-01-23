@@ -2,7 +2,7 @@ package Text::MediaWiki::Parser;
 use strict;
 use warnings;
 
-sub MWNS () { 'http://temp.test/' }
+sub MWNS () { 'http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki' }
 
 my $CanContainPhrasing = {
   p => 1, strong => 1, em => 1, a => 1,
@@ -17,10 +17,7 @@ sub new ($) {
 sub parse_char_string ($$$) {
   my ($self, $data => $doc) = @_;
 
-  $data =~ s/\x0D\x0A/\x0A/g;
-  $data =~ tr/\x0D/\x0A/;
-
-  $doc->inner_html ('<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body></body></html>');
+  $doc->inner_html ('<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mw="'.MWNS.'"><head></head><body></body></html>');
 
   my @open = ($doc->body);
 
@@ -32,13 +29,12 @@ sub parse_char_string ($$$) {
     }
   };
 
-  if ($data =~ s/^#REDIRECT\s*\[\[([^\[\]]+)\]\]\s*$//) {
-    $doc->document_element->set_attribute_ns (MWNS, 'mw:redirect' => $1);
-  }
+  my $parse_inline = sub ($) {
+    my $data = $_[0];
 
-    while (length $data) {
+  while (length $data) {
         if ($data =~ s/^\{\{//) {
-            my $el = $doc->create_element_ns (MWNS, 'block');
+            my $el = $doc->create_element_ns (MWNS, 'mw:block');
             $open[-1]->append_child ($el);
             push @open, $el;
         } elsif ($data =~ s/^\}\}//) {
@@ -50,7 +46,7 @@ sub parse_char_string ($$$) {
             }
         } elsif ($data =~ s/^\[\[//) {
             $insert_p->();
-            my $el = $doc->create_element_ns (MWNS, 'link');
+            my $el = $doc->create_element_ns (MWNS, 'mw:link');
             $open[-1]->append_child ($el);
             push @open, $el;
         } elsif ($data =~ s/^\]\]//) {
@@ -75,7 +71,7 @@ sub parse_char_string ($$$) {
             }
         } elsif ($data =~ s/^<(ref|gallery)>//) {
             $insert_p->() if $1 eq 'ref';
-            my $el = $doc->create_element_ns (MWNS, $1);
+            my $el = $doc->create_element_ns (MWNS, 'mw:'.$1);
             $open[-1]->append_child ($el);
             push @open, $el;
         } elsif ($data =~ s{^</(ref|gallery)>}{}) {
@@ -86,7 +82,7 @@ sub parse_char_string ($$$) {
                 $open[-1]->manakai_append_text ("</$1>");
             }
         } elsif ($data =~ s{^<(references)\s*/>}{}) {
-            my $el = $doc->create_element_ns (MWNS, $1);
+            my $el = $doc->create_element_ns (MWNS, 'mw:'.$1);
             $open[-1]->append_child ($el);
         } elsif ($data =~ s{^''}{}) {
             my $ln = $open[-1]->local_name;
@@ -112,22 +108,6 @@ sub parse_char_string ($$$) {
                     push @open, $el
                 }
             }
-        } elsif ($data =~ s/^\x0A==\s*(.+?)\s*==\x0A//) {
-            pop @open if $open[-1]->local_name eq 'p';
-            if ($open[-1]->local_name eq 'section') {
-                pop @open;
-            }
-            my $el0 = $doc->create_element ('section');
-            my $el = $doc->create_element ('h1');
-            $el0->append_child ($el);
-            $el->manakai_append_text ($1);
-            $open[-1]->append_child ($el0);
-            push @open, $el0;
-        } elsif ($data =~ s/^\x0A\x0A+//) {
-            pop @open if $open[-1]->local_name eq 'p';
-            $data = "\x0A" . $data;
-        } elsif ($data =~ s/^\x0A\z//) {
-            #
         } elsif ($data =~ s/^([^'<\{\}\[\]\x0A]+)// or $data =~ s/^(.)//s) {
             $insert_p->() unless $1 eq "\x0A";
             $open[-1]->manakai_append_text ($1)
@@ -135,6 +115,30 @@ sub parse_char_string ($$$) {
                    $CanContainPhrasing->{$open[-1]->local_name};
         }
     }
+  };
+
+  $data =~ s/\x0D\x0A/\x0A/g;
+  $data =~ tr/\x0D/\x0A/;
+  if ($data =~ s/^#REDIRECT\s*\[\[([^\[\]]+)\]\]\s*$//) {
+    $doc->document_element->set_attribute_ns (MWNS, 'mw:redirect' => $1);
+  }
+
+  for my $line (split /\x0A/, $data) {
+    if ($line =~ /^==\s*(.+?)\s*==$/) {
+      pop @open while not {body => 1}->{$open[-1]->local_name};
+
+      my $el0 = $doc->create_element ('section');
+      my $el = $doc->create_element ('h1');
+      $el0->append_child ($el);
+      $el->manakai_append_text ($1);
+      $open[-1]->append_child ($el0);
+      push @open, $el0;
+    } elsif ($line =~ /^$/) {
+      pop @open while not {body => 1, section => 1}->{$open[-1]->local_name};
+    } else {
+      $parse_inline->("\x0A" . $line);
+    }
+  }
 } # parse_char_string
 
 1;
