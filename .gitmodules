@@ -1,0 +1,27 @@
+[submodule "modules/charclass"]
+	path = modules/charclass
+	url = git://github.com/wakaba/perl-charclass
+[submodule "modules/web-dom"]
+	path = modules/web-dom
+	url = git://github.com/manakai/perl-web-dom
+[submodule "modules/web-markup"]
+	path = modules/web-markup
+	url = git://github.com/manakai/perl-web-markup
+[submodule "modules/web-css"]
+	path = modules/web-css
+	url = git://github.com/manakai/perl-web-css
+[submodule "modules/web-useragent-functions"]
+	path = modules/web-useragent-functions
+	url = git://github.com/wakaba/perl-web-useragent-functions
+[submodule "modules/web-encodings"]
+	path = modules/web-encodings
+	url = git://github.com/manakai/perl-web-encodings
+[submodule "modules/web-url"]
+	path = modules/web-url
+	url = git://github.com/manakai/perl-web-url
+[submodule "modules/web-utils"]
+	path = modules/web-utils
+	url = git://github.com/wakaba/perl-web-utils
+[submodule "t_deps/modules/testdataparser"]
+	path = t_deps/modules/testdataparser
+	url = git://github.com/wakaba/testdataparser
