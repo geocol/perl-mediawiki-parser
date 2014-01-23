@@ -1,0 +1,15 @@
+MediaWiki source text parser
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Author
+
+Wakaba <wakaba@suikawiki.org>.
+
+* License
+
+Copyright 2010-2014 Wakaba <wakaba@suikawiki.org>.
+
+Copyright 2014 Hatena <http://hatenacorp.jp/>.
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
