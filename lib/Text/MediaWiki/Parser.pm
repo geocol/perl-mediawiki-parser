@@ -21,6 +21,7 @@ sub parse_char_string ($$$) {
   $doc->inner_html ('<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mw="'.MWNS.'"><head></head><body></body></html>');
 
   my @open = ($doc->body);
+  $doc->body->set_user_data (level => 1);
   my $nowiki;
 
   my $insert_p = sub () {
@@ -150,15 +151,31 @@ sub parse_char_string ($$$) {
   }
 
   for my $line (split /\x0A/, $data) {
-    if ($line =~ /^==\s*(.+?)\s*==$/) {
-      pop @open while not {body => 1}->{$open[-1]->local_name};
+    if ($line =~ /^(={2,6})\s*(.+?)\s*\1$/) {
+      my $level = length $1;
+      my $text = $2;
+      pop @open while not ({body => 1, section => 1}->{$open[-1]->local_name} and
+                           $open[-1]->get_user_data ('level') < $level);
+      my $next_level = $open[-1]->get_user_data ('level');
+      $next_level++;
+      while ($next_level < $level) {
+        my $el = $doc->create_element ('section');
+        $el->set_user_data (level => $next_level);
+        $open[-1]->append_child ($el);
+        push @open, $el;
+        $next_level++;
+      }
 
       my $el0 = $doc->create_element ('section');
+      $el0->set_user_data (level => $level);
       my $el = $doc->create_element ('h1');
       $el0->append_child ($el);
-      $el->manakai_append_text ($1);
+      $el->manakai_append_text ($text);
       $open[-1]->append_child ($el0);
       push @open, $el0;
+    } elsif ($line =~ /^----$/) {
+      pop @open while not {body => 1, section => 1}->{$open[-1]->local_name};
+      $open[-1]->append_child ($doc->create_element ('hr'));
     } elsif ($line =~ /^$/) {
       pop @open while not {body => 1, section => 1}->{$open[-1]->local_name};
     } else {

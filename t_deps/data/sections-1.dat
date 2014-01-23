@@ -21,3 +21,140 @@ aa"
 |         "xytaa"
 |       <p>
 |         "aa"
+
+#data
+=== abcd ===
+aaaa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <section>
+|       <section>
+|         <h1>
+|           "abcd"
+|         <p>
+|           "aaaa"
+
+#data
+== xya ==
+=== abcd ===
+aaaa
+=== aa a ===
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <section>
+|       <h1>
+|         "xya"
+|       <section>
+|         <h1>
+|           "abcd"
+|         <p>
+|           "aaaa"
+|       <section>
+|         <h1>
+|           "aa a"
+
+#data
+=== xya ===
+==== abcd ====
+aaaa
+== aa a ==
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <section>
+|       <section>
+|         <h1>
+|           "xya"
+|         <section>
+|           <h1>
+|             "abcd"
+|           <p>
+|             "aaaa"
+|     <section>
+|       <h1>
+|         "aa a"
+
+#data
+====== abcd ======
+aaaa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <section>
+|       <section>
+|         <section>
+|           <section>
+|             <section>
+|               <h1>
+|                 "abcd"
+|               <p>
+|                 "aaaa"
+
+#data
+======= abcd =======
+aaaa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <section>
+|       <section>
+|         <section>
+|           <section>
+|             <section>
+|               <h1>
+|                 "= abcd ="
+|               <p>
+|                 "aaaa"
+
+#data
+| aa
+| ----
+| bb
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "aa"
+|     <hr>
+|     <p>
+|       "bb"
+
+#data
+| == h ==
+| aa
+| ----
+| bb
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <section>
+|       <h1>
+|         "h"
+|       <p>
+|         "aa"
+|       <hr>
+|       <p>
+|         "bb"
