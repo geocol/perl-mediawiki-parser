@@ -1,0 +1,26 @@
+#data
+ww<nowiki>ab[[aa]]d<s>d</s></nowiki>aa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "ww"
+|       <mw nowiki>
+|         "ab[[aa]]d<s>d</s>"
+|       "aa"
+
+#data
+ww<nowiki/></nowiki>aa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "ww"
+|       <mw nowiki>
+|       "</nowiki>aa"

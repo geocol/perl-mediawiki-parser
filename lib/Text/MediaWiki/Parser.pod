@@ -1,0 +1,17 @@
+=head1 NAME
+
+Text::MediaWiki::Parser - MediaWiki source text parser
+
+=head1 XXX
+
+XXX
+
+=head1 SEE ALSO
+
+Help:Formatting <http://www.mediawiki.org/wiki/Help:Formatting>.
+
+Help:Wiki markup <http://en.wikipedia.org/wiki/Help:Wiki_markup>.
+
+Help:Section <http://en.wikipedia.org/wiki/Help:Section>.
+
+=cut

@@ -1,0 +1,94 @@
+#data
+aa&&a''aaa''af'w
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "aa&&a"
+|       <i>
+|         "aaa"
+|       "af'w"
+
+#data
+aa&&a'''aaa'''af'w
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "aa&&a"
+|       <b>
+|         "aaa"
+|       "af'w"
+
+#data
+aa&&a''a''x''a''af'w
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "aa&&a"
+|       <i>
+|         "a"
+|       "x"
+|       <i>
+|         "a"
+|       "af'w"
+
+#data
+aa&&a''a'''x'''a''af'w
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "aa&&a"
+|       <i>
+|         "a"
+|       "'x"
+|       <b>
+|         "a"
+|         <i>
+|           "af'w"
+
+#data
+aa&&a'''''x'''a''af'w
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "aa&&a"
+|       <b>
+|         <i>
+|           "x"
+|         "'a"
+|         <i>
+|           "af'w"
+
+#data
+aa'''''aa'''''bb
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "aa"
+|       <b>
+|         <i>
+|           "aa"
+|       "bb"

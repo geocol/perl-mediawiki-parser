@@ -5,8 +5,9 @@ use warnings;
 sub MWNS () { 'http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki' }
 
 my $CanContainPhrasing = {
-  p => 1, strong => 1, em => 1, a => 1,
-  ref => 1, gallery => 1,
+  p => 1, b => 1, i => 1, a => 1,
+  s => 1, strike => 1,
+  ref => 1, gallery => 1, nowiki => 1,
   block => 1, link => 1,
 };
 
@@ -20,6 +21,7 @@ sub parse_char_string ($$$) {
   $doc->inner_html ('<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mw="'.MWNS.'"><head></head><body></body></html>');
 
   my @open = ($doc->body);
+  my $nowiki;
 
   my $insert_p = sub () {
     if (not $CanContainPhrasing->{$open[-1]->local_name}) {
@@ -32,12 +34,19 @@ sub parse_char_string ($$$) {
   my $parse_inline = sub ($) {
     my $data = $_[0];
 
-  while (length $data) {
-        if ($data =~ s/^\{\{//) {
+    while (length $data) {
+      if ($nowiki) {
+        if ($data =~ s{^</nowiki>}{}) {
+          pop @open;
+          $nowiki = 0;
+        } elsif ($data =~ s{^([^<]+)}{} or $data =~ s{^(.)}{}s) {
+          $open[-1]->manakai_append_text ($1);
+        }
+      } elsif ($data =~ s/^\{\{//) {
             my $el = $doc->create_element_ns (MWNS, 'mw:block');
             $open[-1]->append_child ($el);
             push @open, $el;
-        } elsif ($data =~ s/^\}\}//) {
+      } elsif ($data =~ s/^\}\}//) {
             if ($open[-1]->local_name eq 'block') {
                 pop @open;
             } else {
@@ -69,7 +78,19 @@ sub parse_char_string ($$$) {
                 $insert_p->();
                 $open[-1]->manakai_append_text (']');
             }
-        } elsif ($data =~ s/^<(ref|gallery)>//) {
+      } elsif ($data =~ s/^<(s|strike)>//) {
+        $insert_p->();
+        my $el = $doc->create_element ($1);
+        $open[-1]->append_child ($el);
+        push @open, $el;
+      } elsif ($data =~ s{^</(s|strike)>}{}) {
+        if ($open[-1]->local_name eq $1) {
+          pop @open;
+        } else {
+          $insert_p->();
+          $open[-1]->manakai_append_text ("</$1>");
+        }
+      } elsif ($data =~ s/^<(ref|gallery)>//) {
             $insert_p->() if $1 eq 'ref';
             my $el = $doc->create_element_ns (MWNS, 'mw:'.$1);
             $open[-1]->append_child ($el);
@@ -81,29 +102,34 @@ sub parse_char_string ($$$) {
                 $insert_p->();
                 $open[-1]->manakai_append_text ("</$1>");
             }
-        } elsif ($data =~ s{^<(references)\s*/>}{}) {
-            my $el = $doc->create_element_ns (MWNS, 'mw:'.$1);
-            $open[-1]->append_child ($el);
-        } elsif ($data =~ s{^''}{}) {
+      } elsif ($data =~ s{^<nowiki>}{}) {
+        my $el = $doc->create_element_ns (MWNS, 'mw:nowiki');
+        $open[-1]->append_child ($el);
+        push @open, $el;
+        $nowiki = 1;
+      } elsif ($data =~ s{^<(nowiki|references)\s*/>}{}) {
+        my $el = $doc->create_element_ns (MWNS, 'mw:'.$1);
+        $open[-1]->append_child ($el);
+      } elsif ($data =~ s{^''}{}) {
             my $ln = $open[-1]->local_name;
-            if ($ln eq 'strong') {
+            if ($ln eq 'b') {
                 if ($data =~ s{^'}{}) {
                     pop @open;
                 } else {
-                    my $el = $doc->create_element ('em');
+                    my $el = $doc->create_element ('i');
                     $open[-1]->append_child ($el);
                     push @open, $el
                 }
-            } elsif ($ln eq 'em') {
+            } elsif ($ln eq 'i') {
                 pop @open;
             } else {
                 $insert_p->();
                 if ($data =~ s{^'}{}) {
-                    my $el = $doc->create_element ('strong');
+                    my $el = $doc->create_element ('b');
                     $open[-1]->append_child ($el);
                     push @open, $el
                 } else {
-                    my $el = $doc->create_element ('em');
+                    my $el = $doc->create_element ('i');
                     $open[-1]->append_child ($el);
                     push @open, $el
                 }
