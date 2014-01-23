@@ -45,3 +45,101 @@ axx</nowiki>aaaa
 | axx"
 |     <p>
 |       "aaaa"
+
+#data
+ <nowiki>aaa</nowiki> <nowiki>&amp;</nowiki>
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw nowiki>
+|       pre=""
+|       "aaa"
+|     <p>
+|       " "
+|       <mw nowiki>
+|         "&amp;"
+
+#data
+<pre>aaa[[aa]]</pre>
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <pre>
+|       mw nowiki=""
+|       "aaa[[aa]]"
+
+#data
+<pre>aaa
+[[aa]]</pre>x
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <pre>
+|       mw nowiki=""
+|       "aaa
+| [[aa]]"
+|     <p>
+|       "x"
+
+#data
+<pre>aaa
+''
+[[aa]]</pre>x
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <pre>
+|       mw nowiki=""
+|       "aaa
+| ''
+| [[aa]]"
+|     <p>
+|       "x"
+
+#data
+aaa<pre>a'''a</pre>b'''
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "aaa"
+|     <pre>
+|       mw nowiki=""
+|       "a'''a"
+|     <p>
+|       "b"
+|       <b>
+
+#data
+| <pre
+| title="aa&amp;>b" a='">"'
+| 
+| >aa</pre   >a
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <pre>
+|       a="">""
+|       mw nowiki=""
+|       title="aa&>b"
+|       "aa"
+|     <p>
+|       "a"

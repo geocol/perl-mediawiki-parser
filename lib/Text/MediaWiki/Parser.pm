@@ -4,12 +4,24 @@ use warnings;
 
 sub MWNS () { 'http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki' }
 
+my $HTMLPhrasing = {
+  s => 1, strike => 1, ins => 1, u => 1, del => 1, code => 1, tt => 1,
+  span => 1, font => 1,
+};
+
+my $HTMLFlow = {
+  div => 1, blockquote => 1,
+};
+
+my $HTMLPhrasingPattern = join '|', keys %$HTMLPhrasing;
+my $HTMLFlowPattern = join '|', keys %$HTMLFlow;
+
 my $CanContainPhrasing = {
+  %$HTMLPhrasing,
   p => 1, b => 1, i => 1, a => 1, pre => 1,
-  s => 1, strike => 1,
   li => 1, dt => 1, dd => 1,
   ref => 1, gallery => 1, nowiki => 1,
-  block => 1, link => 1,
+  block => 1, link => 1, comment => 1,
 };
 
 sub new ($) {
@@ -24,6 +36,10 @@ sub parse_char_string ($$$) {
   my @open = ($doc->body);
   $doc->body->set_user_data (level => 1);
   my $nowiki;
+  my $current_tag;
+
+  my $html = $doc->implementation->create_document->create_element ('div');
+  $html->owner_document->manakai_is_html (1);
 
   my $insert_p = sub () {
     if (not $CanContainPhrasing->{$open[-1]->local_name}) {
@@ -37,14 +53,22 @@ sub parse_char_string ($$$) {
     my $data = $_[0];
 
     while (length $data) {
-      if ($nowiki) {
-        if ($data =~ s{^</nowiki>}{}) {
-          pop @open;
-          $nowiki = 0;
-        } elsif ($data =~ s{^([^<]+)}{} or $data =~ s{^(.)}{}s) {
+      if (defined $nowiki) {
+        if ($data =~ s{^(.*?)$nowiki}{}s) {
           $open[-1]->manakai_append_text ($1);
+          pop @open;
+          undef $nowiki;
+        } else {
+          $open[-1]->manakai_append_text ($data);
+          $data = '';
         }
-      } elsif ($data =~ s/^\{\{//) {
+        next;
+      } elsif (defined $current_tag) {
+        $data = $current_tag . $data;
+        undef $current_tag;
+      }
+
+      if ($data =~ s/^\{\{//) {
             my $el = $doc->create_element_ns (MWNS, 'mw:block');
             $open[-1]->append_child ($el);
             push @open, $el;
@@ -80,17 +104,45 @@ sub parse_char_string ($$$) {
                 $insert_p->();
                 $open[-1]->manakai_append_text (']');
             }
-      } elsif ($data =~ s/^<(s|strike)>//) {
+      } elsif ($data =~ s/^<($HTMLPhrasingPattern)\b((?>[^>"']|"[^"]*"|'[^']*')*)>//o) {
         $insert_p->();
         my $el = $doc->create_element ($1);
+        if (length $2) {
+          $html->inner_html ('<div ' . $2 . '></div>');
+          for (@{$html->first_child->attributes}) {
+            $el->set_attribute ($_->name => $_->value);
+          }
+        }
         $open[-1]->append_child ($el);
         push @open, $el;
-      } elsif ($data =~ s{^</(s|strike)>}{}) {
-        if ($open[-1]->local_name eq $1) {
+      } elsif ($data =~ s/^<($HTMLFlowPattern)\b((?>[^>"']|"[^"]*"|'[^']*')*)>//o) {
+        pop @open while not {body => 1, section => 1, li => 1, dt => 1, dd => 1, %$HTMLFlow}->{$open[-1]->local_name};
+        my $el = $doc->create_element ($1);
+        if (length $2) {
+          $html->inner_html ('<div ' . $2 . '></div>');
+          for (@{$html->first_child->attributes}) {
+            $el->set_attribute ($_->name => $_->value);
+          }
+        }
+        $open[-1]->append_child ($el);
+        push @open, $el;
+      } elsif ($data =~ s{^(</($HTMLPhrasingPattern)\s*>)}{}o) {
+        if ($open[-1]->local_name eq $2) {
           pop @open;
         } else {
           $insert_p->();
-          $open[-1]->manakai_append_text ("</$1>");
+          $open[-1]->manakai_append_text ($1);
+        }
+      } elsif ($data =~ s{^(</($HTMLFlowPattern)\s*>)}{}o) {
+        if ($open[-1]->local_name eq $2) {
+          pop @open;
+        } elsif ($open[-1]->local_name eq 'p' and
+                 $open[-2]->local_name eq $2) {
+          pop @open;
+          pop @open;
+        } else {
+          $insert_p->();
+          $open[-1]->manakai_append_text ($1);
         }
       } elsif ($data =~ s/^<(ref|gallery)>//) {
             $insert_p->() if $1 eq 'ref';
@@ -105,13 +157,38 @@ sub parse_char_string ($$$) {
                 $open[-1]->manakai_append_text ("</$1>");
             }
       } elsif ($data =~ s{^<nowiki>}{}) {
+        $insert_p->();
         my $el = $doc->create_element_ns (MWNS, 'mw:nowiki');
         $open[-1]->append_child ($el);
         push @open, $el;
-        $nowiki = 1;
+        $nowiki = qr{</nowiki\s*>};
+      } elsif ($data =~ s{^<pre\b((?>[^>"']|"[^"]*"|'[^']*')*)>}{}) {
+        pop @open while not {body => 1, section => 1, li => 1, dt => 1, dd => 1, %$HTMLFlow}->{$open[-1]->local_name};
+        my $el = $doc->create_element ('pre');
+        if (length $1) {
+          $html->inner_html ('<div ' . $1 . '></div>');
+          for (@{$html->first_child->attributes}) {
+            $el->set_attribute ($_->name => $_->value);
+          }
+        }
+        $el->set_attribute_ns (MWNS, 'mw:nowiki' => '');
+        $open[-1]->append_child ($el);
+        push @open, $el;
+        $nowiki = qr{</pre\s*>};
+      } elsif ($data =~ s{^<br\s*/?>}{}) {
+        $insert_p->();
+        my $el = $doc->create_element ('br');
+        $open[-1]->append_child ($el);
       } elsif ($data =~ s{^<(nowiki|references)\s*/>}{}) {
         my $el = $doc->create_element_ns (MWNS, 'mw:'.$1);
         $open[-1]->append_child ($el);
+      } elsif ($data =~ s{^(<[a-z0-9]+\b(?>[^>"']|"[^"]*"|'[^']*')*)$}{}) {
+        $current_tag = $1;
+      } elsif ($data =~ s{^<!--}{}) {
+        my $el = $doc->create_element_ns (MWNS, 'mw:comment');
+        $open[-1]->append_child ($el);
+        push @open, $el;
+        $nowiki = qr{-->};
       } elsif ($data =~ s{^''}{}) {
             my $ln = $open[-1]->local_name;
             if ($ln eq 'b') {
@@ -151,18 +228,10 @@ sub parse_char_string ($$$) {
     $doc->document_element->set_attribute_ns (MWNS, 'mw:redirect' => $1);
   }
 
-  my $nowiki;
   for my $line (split /\x0A/, $data) {
-    if ($nowiki) {
-      my ($before, $after) = split m{</nowiki>}, $line, 2;
-      if (defined $after) {
-        $open[-1]->manakai_append_text ("\x0A" . $before);
-        pop @open;
-        $parse_inline->($after);
-      } else {
-        $open[-1]->manakai_append_text ("\x0A" . $before);
-      }
-    } elsif ($line =~ /^(={2,6})\s*(.+?)\s*\1$/) {
+    if (defined $nowiki or defined $current_tag) {
+      $parse_inline->("\x0A" . $line);
+    } elsif ($line =~ /^(={2,6})\s*(.+?)\s*\1$/s) {
       my $level = length $1;
       my $text = $2;
       pop @open while not ({body => 1, section => 1}->{$open[-1]->local_name} and
@@ -184,7 +253,7 @@ sub parse_char_string ($$$) {
       $el->manakai_append_text ($text);
       $open[-1]->append_child ($el0);
       push @open, $el0;
-    } elsif ($line =~ /^([*#:;]+)\s*(.+)$/) {
+    } elsif ($line =~ /^([*#:;]+)\s*(.+)$/s) {
       my $level = length $1;
       my $text = $2;
       my $list_type = {'*' => 'ul', '#' => 'ol',
@@ -222,23 +291,16 @@ sub parse_char_string ($$$) {
         $next_level++;
       }
       $parse_inline->($text);
-    } elsif ($line =~ /^ <nowiki>(.*)$/) {
+    } elsif ($line =~ /^ <nowiki>(.*)$/s) {
       my $text = $1;
-      pop @open while not {body => 1, section => 1, pre => 1}->{$open[-1]->local_name};
+      pop @open while not {body => 1, section => 1}->{$open[-1]->local_name};
       my $el = $doc->create_element_ns (MWNS, 'mw:nowiki');
       $el->set_attribute (pre => '');
       $open[-1]->append_child ($el);
       push @open, $el;
-      $nowiki = 1;
-      my ($before, $after) = split m{</nowiki>}, $text, 2;
-      if (defined $after) {
-        $open[-1]->manakai_append_text ($before);
-        pop @open;
-        $parse_inline->($after);
-      } else {
-        $open[-1]->manakai_append_text ($before);
-      }
-    } elsif ($line =~ /^ .*$/) {
+      $nowiki = qr{</nowiki\s*>};
+      $parse_inline->($text);
+    } elsif ($line =~ /^ .*$/s) {
       pop @open while not {body => 1, section => 1, pre => 1}->{$open[-1]->local_name};
       unless ($open[-1]->local_name eq 'pre') {
         my $el = $doc->create_element ('pre');

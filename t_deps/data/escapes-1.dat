@@ -24,3 +24,59 @@ ww<nowiki/></nowiki>aa
 |       "ww"
 |       <mw nowiki>
 |       "</nowiki>aa"
+
+#data
+aaa<nowiki>aa
+[[bbb]]
+[[cc]]</nowiki>[[aa]]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "aaa"
+|       <mw nowiki>
+|         "aa
+[[bbb]]
+[[cc]]"
+|       <mw link>
+|         "aa"
+
+#data
+<nowiki> </nowiki>
+ <nowiki>abc
+</nowiki>
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw nowiki>
+|         " "
+|     <mw nowiki>
+|       pre=""
+|       "abc
+| "
+
+#data
+<nowiki> </nowiki>
+<nowiki>abc
+</nowiki>
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw nowiki>
+|         " "
+|       "
+| "
+|       <mw nowiki>
+|         "abc
+| "

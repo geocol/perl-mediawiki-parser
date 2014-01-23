@@ -144,3 +144,55 @@ ab
 |     <pre>
 |       <mw link>
 |         "aa"
+
+#data
+<!--aa-->
+ <!-- aaaa -->
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw comment>
+|       "aa"
+|     <pre>
+|       <mw comment>
+|         " aaaa "
+
+#data
+ab<!--aa-->
+ <!-- aaaa -->x
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "ab"
+|       <mw comment>
+|         "aa"
+|     <pre>
+|       <mw comment>
+|         " aaaa "
+|       "x"
+
+#data
+<!--
+  aaa
+  bbb
+-->xx
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw comment>
+|       "
+|   aaa
+|   bbb
+| "
+|     <p>
+|       "xx"
