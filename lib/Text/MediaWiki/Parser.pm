@@ -41,6 +41,17 @@ sub parse_char_string ($$$) {
   my $html = $doc->implementation->create_document->create_element ('div');
   $html->owner_document->manakai_is_html (1);
 
+  my $set_attrs = sub {
+    my ($attrs => $el) = @_;
+    if (length $attrs) {
+      $attrs =~ s/&(?:\x{05E8}\x{05DC}\x{05DE}|\x{0631}\x{0644}\x{0645});/&rlm;/g;
+      $html->inner_html ('<div ' . $attrs . '></div>');
+      for (@{$html->first_child->attributes}) {
+        $el->set_attribute ($_->name => $_->value);
+      }
+    }
+  };
+
   my $insert_p = sub () {
     if (not $CanContainPhrasing->{$open[-1]->local_name}) {
       my $el = $doc->create_element ('p');
@@ -107,23 +118,13 @@ sub parse_char_string ($$$) {
       } elsif ($data =~ s/^<($HTMLPhrasingPattern)\b((?>[^>"']|"[^"]*"|'[^']*')*)>//o) {
         $insert_p->();
         my $el = $doc->create_element ($1);
-        if (length $2) {
-          $html->inner_html ('<div ' . $2 . '></div>');
-          for (@{$html->first_child->attributes}) {
-            $el->set_attribute ($_->name => $_->value);
-          }
-        }
+        $set_attrs->($2 => $el);
         $open[-1]->append_child ($el);
         push @open, $el;
       } elsif ($data =~ s/^<($HTMLFlowPattern)\b((?>[^>"']|"[^"]*"|'[^']*')*)>//o) {
         pop @open while not {body => 1, section => 1, li => 1, dt => 1, dd => 1, %$HTMLFlow}->{$open[-1]->local_name};
         my $el = $doc->create_element ($1);
-        if (length $2) {
-          $html->inner_html ('<div ' . $2 . '></div>');
-          for (@{$html->first_child->attributes}) {
-            $el->set_attribute ($_->name => $_->value);
-          }
-        }
+        $set_attrs->($2 => $el);
         $open[-1]->append_child ($el);
         push @open, $el;
       } elsif ($data =~ s{^(</($HTMLPhrasingPattern)\s*>)}{}o) {
@@ -165,12 +166,7 @@ sub parse_char_string ($$$) {
       } elsif ($data =~ s{^<pre\b((?>[^>"']|"[^"]*"|'[^']*')*)>}{}) {
         pop @open while not {body => 1, section => 1, li => 1, dt => 1, dd => 1, %$HTMLFlow}->{$open[-1]->local_name};
         my $el = $doc->create_element ('pre');
-        if (length $1) {
-          $html->inner_html ('<div ' . $1 . '></div>');
-          for (@{$html->first_child->attributes}) {
-            $el->set_attribute ($_->name => $_->value);
-          }
-        }
+        $set_attrs->($1 => $el);
         $el->set_attribute_ns (MWNS, 'mw:nowiki' => '');
         $open[-1]->append_child ($el);
         push @open, $el;
@@ -213,12 +209,19 @@ sub parse_char_string ($$$) {
                     push @open, $el
                 }
             }
-        } elsif ($data =~ s/^([^'<\{\}\[\]\x0A]+)// or $data =~ s/^(.)//s) {
-            $insert_p->() unless $1 eq "\x0A";
-            $open[-1]->manakai_append_text ($1)
-                if $1 ne "\x0A" or
-                   $CanContainPhrasing->{$open[-1]->local_name};
-        }
+      } elsif ($data =~ s/^(&[a-z0-9]+;)//) {
+        $insert_p->();
+        $html->inner_html ($1);
+        $open[-1]->manakai_append_text ($html->text_content);
+      } elsif ($data =~ s/^&(?:\x{05E8}\x{05DC}\x{05DE}|\x{0631}\x{0644}\x{0645});//) {
+        $insert_p->();
+        $open[-1]->manakai_append_text ("\x{200F}"); # RKM
+      } elsif ($data =~ s/^([^&'<\{\}\[\]\x0A]+)// or $data =~ s/^(.)//s) {
+        $insert_p->() unless $1 eq "\x0A";
+        $open[-1]->manakai_append_text ($1)
+            if $1 ne "\x0A" or
+               $CanContainPhrasing->{$open[-1]->local_name};
+      }
     }
   };
 

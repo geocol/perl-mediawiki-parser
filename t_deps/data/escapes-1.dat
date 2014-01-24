@@ -80,3 +80,29 @@ aaa<nowiki>aa
 |       <mw nowiki>
 |         "abc
 | "
+
+#data
+<<nowiki/>span>
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "<"
+|       <mw nowiki>
+|       "span>"
+
+#data
+&<nowiki/>amp;
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "&"
+|       <mw nowiki>
+|       "amp;"

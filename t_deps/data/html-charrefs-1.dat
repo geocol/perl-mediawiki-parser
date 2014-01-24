@@ -1,0 +1,68 @@
+#data
+aa&amp;a&euro;&copy;x
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "aa&a\u20AC\u00A9x"
+
+#data
+<div title="aa&amp;a&euro;&copy;x">aa</div>
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <div>
+|       title="aa&a\u20AC\u00A9x"
+|       <p>
+|         "aa"
+
+#data escaped
+&\u05E8\u05DC\u05DE;
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "\u200F"
+
+#data escaped
+&\u0631\u0644\u0645;
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "\u200F"
+
+#data escaped
+<blockquote cite="&\u05E8\u05DC\u05DE;">
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <blockquote>
+|       cite="\u200F"
+
+#data escaped
+<tt class="&\u0631\u0644\u0645;&rlm;&\u0631\u0644\u0645;">
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <tt>
+|         class="\u200F\u200F\u200F"
