@@ -1,0 +1,187 @@
+#data
+[http://foo/]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw xl>
+|         "http://foo/"
+
+#data
+a[http://foo/]b
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "a"
+|       <mw xl>
+|         "http://foo/"
+|       "b"
+
+#data
+[http://foo/   ]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw xl>
+|         href="http://foo/"
+
+#data
+[http://foo/   abc  def]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw xl>
+|         href="http://foo/"
+|         "abc  def"
+
+#data
+[ftp://foo/   abc  def]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw xl>
+|         href="ftp://foo/"
+|         "abc  def"
+
+#data
+[http://foo/   abc  de{{aa}}f]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw xl>
+|         href="http://foo/"
+|         "abc  de"
+|         <mw block>
+|           "aa"
+|         "f"
+
+#data
+[{{http}}://foo/   abc  de{{aa}}f]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw xl>
+|         <mw href>
+|           <mw block>
+|             "http"
+|           "://foo/"
+|         "abc  de"
+|         <mw block>
+|           "aa"
+|         "f"
+
+#data
+http://hoge/?fuga#abc
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw xl>
+|         bare=""
+|         "http://hoge/?fuga#abc"
+
+#data
+abchttp://hoge/?fuga#abc
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "abchttp://hoge/?fuga#abc"
+
+#data
+ab http://hoge/?fuga#abc  as
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "ab "
+|       <mw xl>
+|         bare=""
+|         "http://hoge/?fuga#abc"
+|       "  as"
+
+#data
+ab http://hoge/?fuga#abc
+as
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "ab "
+|       <mw xl>
+|         bare=""
+|         "http://hoge/?fuga#abc"
+|       "
+| as"
+
+#data
+ab http://{{hoge}}/?fuga#abc
+as
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "ab "
+|       <mw xl>
+|         bare=""
+|         "http://"
+|         <mw block>
+|           "hoge"
+|         "/?fuga#abc"
+|       "
+| as"
+
+#data
+<nowiki>http://hoge/</nowiki>a
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw nowiki>
+|         "http://hoge/"
+|       "a"
