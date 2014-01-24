@@ -21,7 +21,7 @@ my $CanContainPhrasing = {
   p => 1, b => 1, i => 1, a => 1, pre => 1,
   li => 1, dt => 1, dd => 1,
   ref => 1, gallery => 1, nowiki => 1,
-  block => 1, link => 1, comment => 1,
+  block => 1, l => 1, lsrc => 1, comment => 1,
 };
 
 sub new ($) {
@@ -90,19 +90,42 @@ sub parse_char_string ($$$) {
                 $insert_p->();
                 $open[-1]->manakai_append_text ('}}');
             }
-        } elsif ($data =~ s/^\[\[//) {
-            $insert_p->();
-            my $el = $doc->create_element_ns (MWNS, 'mw:link');
-            $open[-1]->append_child ($el);
-            push @open, $el;
-        } elsif ($data =~ s/^\]\]//) {
-            if ($open[-1]->local_name eq 'link') {
-                pop @open;
+      } elsif ($data =~ s/^\[\[//) {
+        $insert_p->();
+        my $el = $doc->create_element_ns (MWNS, 'mw:l');
+        $open[-1]->append_child ($el);
+        push @open, $el;
+      } elsif ($data =~ s/^#REDIRECT\s*\[\[//) {
+        $insert_p->();
+        my $el = $doc->create_element_ns (MWNS, 'mw:l');
+        $el->set_attribute (redirect => '');
+        $open[-1]->append_child ($el);
+        push @open, $el;
+      } elsif ($data =~ s/^\]\]//) {
+        if ($open[-1]->local_name eq 'l') {
+          if ($data =~ s/^([^\s\[<{'&#]+)//) {
+            if ($open[-1]->has_attribute_ns (undef, 'lsrc') or
+                ($open[-1]->children->length and
+                 $open[-1]->children->[0]->local_name eq 'lsrc')) {
+              $open[-1]->manakai_append_text ($1);
             } else {
-                $insert_p->();
-                $open[-1]->manakai_append_text (']]');
+              if ($open[-1]->children->length) {
+                my $el = $doc->create_element_ns (MWNS, 'mw:lsrc');
+                $el->append_child ($_->clone_node (1))
+                    for ($open[-1]->child_nodes->to_list);
+                $open[-1]->insert_before ($el, $open[-1]->first_child);
+              } else {
+                $open[-1]->set_attribute (lsrc => $open[-1]->text_content);
+              }
+              $open[-1]->manakai_append_text ($1);
             }
-        } elsif ($data =~ s/^\[(http:[^\s\]]+)\s*//) {
+          }
+          pop @open;
+        } else {
+          $insert_p->();
+          $open[-1]->manakai_append_text (']]');
+        }
+      } elsif ($data =~ s/^\[(http:[^\s\]]+)\s*//) {
             $insert_p->();
             my $el = $doc->create_element ('a');
             $el->set_attribute (href => $1);
@@ -186,29 +209,29 @@ sub parse_char_string ($$$) {
         push @open, $el;
         $nowiki = qr{-->};
       } elsif ($data =~ s{^''}{}) {
-            my $ln = $open[-1]->local_name;
-            if ($ln eq 'b') {
-                if ($data =~ s{^'}{}) {
-                    pop @open;
-                } else {
-                    my $el = $doc->create_element ('i');
-                    $open[-1]->append_child ($el);
-                    push @open, $el
-                }
-            } elsif ($ln eq 'i') {
-                pop @open;
-            } else {
-                $insert_p->();
-                if ($data =~ s{^'}{}) {
-                    my $el = $doc->create_element ('b');
-                    $open[-1]->append_child ($el);
-                    push @open, $el
-                } else {
-                    my $el = $doc->create_element ('i');
-                    $open[-1]->append_child ($el);
-                    push @open, $el
-                }
-            }
+        my $ln = $open[-1]->local_name;
+        if ($ln eq 'b') {
+          if ($data =~ s{^'}{}) {
+            pop @open;
+          } else {
+            my $el = $doc->create_element ('i');
+            $open[-1]->append_child ($el);
+            push @open, $el
+          }
+        } elsif ($ln eq 'i') {
+          pop @open;
+        } else {
+          $insert_p->();
+          if ($data =~ s{^'}{}) {
+            my $el = $doc->create_element ('b');
+            $open[-1]->append_child ($el);
+            push @open, $el
+          } else {
+            my $el = $doc->create_element ('i');
+            $open[-1]->append_child ($el);
+            push @open, $el
+          }
+        }
       } elsif ($data =~ s/^(&[a-z0-9]+;)//) {
         $insert_p->();
         $html->inner_html ($1);
@@ -216,7 +239,28 @@ sub parse_char_string ($$$) {
       } elsif ($data =~ s/^&(?:\x{05E8}\x{05DC}\x{05DE}|\x{0631}\x{0644}\x{0645});//) {
         $insert_p->();
         $open[-1]->manakai_append_text ("\x{200F}"); # RKM
-      } elsif ($data =~ s/^([^&'<\{\}\[\]\x0A]+)// or $data =~ s/^(.)//s) {
+      } elsif ($data =~ s/^\|//) {
+        if ($open[-1]->local_name eq 'l') {
+          if ($open[-1]->has_attribute_ns (undef, 'lsrc') or
+              ($open[-1]->children->length and
+               $open[-1]->children->[0]->local_name eq 'lsrc')) {
+            $insert_p->();
+            $open[-1]->manakai_append_text ('|');
+          } else {
+            if ($open[-1]->children->length) {
+              my $el = $doc->create_element_ns (MWNS, 'mw:lsrc');
+              $el->append_child ($_) for ($open[-1]->child_nodes->to_list);
+              $open[-1]->append_child ($el);
+            } else {
+              $open[-1]->set_attribute (lsrc => $open[-1]->text_content);
+              $open[-1]->text_content ('');
+            }
+          }
+        } else {
+          $insert_p->();
+          $open[-1]->manakai_append_text ('|');
+        }
+      } elsif ($data =~ s/^([^&'<\{\}\[\]|#\x0A]+)// or $data =~ s/^(.)//s) {
         $insert_p->() unless $1 eq "\x0A";
         $open[-1]->manakai_append_text ($1)
             if $1 ne "\x0A" or
