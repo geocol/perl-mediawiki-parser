@@ -1,0 +1,77 @@
+#data
+[[File:hgohehoge]]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw l>
+|         embed=""
+|         "File:hgohehoge"
+
+#data
+[[File:hgohehoge|center]]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw l>
+|         align="center"
+|         embed=""
+|         "File:hgohehoge"
+
+#data
+[[File:hgohehoge|12px|x43px|text-top|alt=abc]]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw l>
+|         alt="abc"
+|         embed=""
+|         height="43"
+|         valign="text-top"
+|         width="12"
+|         "File:hgohehoge"
+
+#data
+[[File:hgohehoge|thumb|12x42px|hogea a]]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw l>
+|         embed=""
+|         format="thumb"
+|         height="42"
+|         width="12"
+|         wref="File:hgohehoge"
+|         "hogea a"
+
+#data
+[[File:hgohehoge|thumb=abc|caaaa|class=ab c]]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw l>
+|         class="ab c"
+|         embed=""
+|         format="thumb"
+|         thumb="abc"
+|         wref="File:hgohehoge"
+|         "caaaa"

@@ -95,6 +95,7 @@ sub parse_char_string ($$$) {
       } elsif ($data =~ s/^\[\[//) {
         $insert_p->();
         my $el = $doc->create_element_ns (MWNS, 'mw:l');
+        $el->set_attribute ('embed' => '') if $data =~ /^(?:File:|Image:)/;
         $open[-1]->append_child ($el);
         push @open, $el;
       } elsif ($data =~ s/^#REDIRECT\s*\[\[//) {
@@ -248,6 +249,36 @@ sub parse_char_string ($$$) {
         $open[-1]->manakai_append_text ("\x{200F}"); # RKM
       } elsif ($data =~ s/^\|//) {
         if ($open[-1]->local_name eq 'l') {
+          if ($open[-1]->has_attribute_ns (undef, 'embed')) {
+            if ($data =~ s/^(border|frameless|frame|thumb(?:nail)?)(?=\||\]\])//) {
+            $open[-1]->set_attribute (format => $1);
+              next;
+            } elsif ($data =~ s/^([0-9]+)px(?=\||\]\])//) {
+              $open[-1]->set_attribute (width => $1);
+              next;
+            } elsif ($data =~ s/^x([0-9]+)px(?=\||\]\])//) {
+              $open[-1]->set_attribute (height => $1);
+              next;
+            } elsif ($data =~ s/^([0-9]+)x([0-9]+)px(?=\||\]\])//) {
+              $open[-1]->set_attribute (width => $1);
+              $open[-1]->set_attribute (height => $2);
+              next;
+            } elsif ($data =~ s/^(upright)(?=\||\]\])//) {
+              $open[-1]->set_attribute (resizing => $1);
+              next;
+            } elsif ($data =~ s/^(left|right|center|none)(?=\||\]\])//) {
+              $open[-1]->set_attribute (align => $1);
+              next;
+            } elsif ($data =~ s/^(sub|super|top|text-top|middle|bottom|text-bottom)(?=\||\]\])//) {
+              $open[-1]->set_attribute (valign => $1);
+              next;
+            } elsif ($data =~ s/^(link|alt|page|class|lang|thumb)=([^|\]]*)(?=\||\]\])//) {
+              $open[-1]->set_attribute ($1 => $2);
+              $open[-1]->set_attribute (format => 'thumb') if $1 eq 'thumb';
+              next;
+            }
+          }
+
           if ($open[-1]->has_attribute_ns (undef, 'wref') or
               ($open[-1]->children->length and
                $open[-1]->children->[0]->local_name eq 'wref')) {
