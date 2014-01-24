@@ -227,3 +227,36 @@ bb
 |         "aaa"
 |     <pre>
 |       "abc"
+
+#data
+;hoge:fuga
+:aaa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <dl>
+|       <dt>
+|         "hoge"
+|       <dd>
+|         "fuga"
+|       <dd>
+|         "aaa"
+
+#data
+; :fuga
+:aaa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <dl>
+|       <dt>
+|       <dd>
+|         "fuga"
+|       <dd>
+|         "aaa"

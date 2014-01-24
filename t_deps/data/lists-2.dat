@@ -1,0 +1,66 @@
+#data
+<ul><li>abc</li><li>aaaa,</li></ul>
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <ul>
+|       <li>
+|         "abc"
+|       <li>
+|         "aaaa,"
+
+#data
+<ul>
+  <li>abc</li>
+  <li>aaaa,</li>
+</ul>
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <ul>
+|       "
+|   "
+|       <li>
+|         "abc"
+|       "
+|   "
+|       <li>
+|         "aaaa,"
+|       "
+| "
+
+#data
+<ol>
+<ul>
+  <li>abc</li>
+  <li>aaaa,</li>
+</ul>
+</ol>
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <ol>
+|       "
+| "
+|       <ul>
+|         "
+|   "
+|         <li>
+|           "abc"
+|         "
+|   "
+|         <li>
+|           "aaaa,"
+|         "
+| "
+|       "
+| "

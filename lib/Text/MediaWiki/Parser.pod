@@ -12,6 +12,8 @@ Help:Formatting <http://www.mediawiki.org/wiki/Help:Formatting>.
 
 Help:Links <http://www.mediawiki.org/wiki/Help:Links>.
 
+Help:Lists <http://www.mediawiki.org/wiki/Help:Lists>.
+
 Help:Wiki markup <http://en.wikipedia.org/wiki/Help:Wiki_markup>.
 
 Help:Section <http://en.wikipedia.org/wiki/Help:Section>.

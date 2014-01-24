@@ -11,6 +11,7 @@ my $HTMLPhrasing = {
 
 my $HTMLFlow = {
   div => 1, blockquote => 1,
+  ul => 1, ol => 1, li => 1, p => 1,
 };
 
 my $HTMLPhrasingPattern = join '|', keys %$HTMLPhrasing;
@@ -22,6 +23,7 @@ my $CanContainPhrasing = {
   li => 1, dt => 1, dd => 1,
   ref => 1, gallery => 1, nowiki => 1,
   block => 1, l => 1, wref => 1, xl => 1, href => 1, comment => 1,
+  ul => 1, ol => 1, dl => 1,
 };
 
 sub new ($) {
@@ -150,7 +152,7 @@ sub parse_char_string ($$$) {
         $open[-1]->append_child ($el);
         push @open, $el;
       } elsif ($data =~ s/^<($HTMLFlowPattern)\b((?>[^>"']|"[^"]*"|'[^']*')*)>//o) {
-        pop @open while not {body => 1, section => 1, li => 1, dt => 1, dd => 1, %$HTMLFlow}->{$open[-1]->local_name};
+        pop @open while not {body => 1, section => 1, li => 1, dt => 1, dd => 1, %$HTMLFlow, p => 0}->{$open[-1]->local_name};
         my $el = $doc->create_element ($1);
         $set_attrs->($2 => $el);
         $open[-1]->append_child ($el);
@@ -192,7 +194,7 @@ sub parse_char_string ($$$) {
         push @open, $el;
         $nowiki = qr{</nowiki\s*>};
       } elsif ($data =~ s{^<pre\b((?>[^>"']|"[^"]*"|'[^']*')*)>}{}) {
-        pop @open while not {body => 1, section => 1, li => 1, dt => 1, dd => 1, %$HTMLFlow}->{$open[-1]->local_name};
+        pop @open while not {body => 1, section => 1, li => 1, dt => 1, dd => 1, %$HTMLFlow, p => 0}->{$open[-1]->local_name};
         my $el = $doc->create_element ('pre');
         $set_attrs->($1 => $el);
         $el->set_attribute_ns (MWNS, 'mw:nowiki' => '');
@@ -389,6 +391,14 @@ sub parse_char_string ($$$) {
         push @open, $el0, $el;
         $next_level++;
       }
+      if ($text =~ s/^([^:]*)://) {
+        $parse_inline->($1);
+        pop @open;
+        my $el = $doc->create_element ('dd');
+        $el->set_user_data (level => $level);
+        $open[-1]->append_child ($el);
+        push @open, $el;
+      }
       $parse_inline->($text);
     } elsif ($line =~ /^ <nowiki>(.*)$/s) {
       my $text = $1;
@@ -399,7 +409,8 @@ sub parse_char_string ($$$) {
       push @open, $el;
       $nowiki = qr{</nowiki\s*>};
       $parse_inline->($text);
-    } elsif ($line =~ /^ .*$/s) {
+    } elsif ($line =~ /^ .*$/s and
+             not {ul => 1, ol => 1, dl => 1}->{$open[-1]->local_name}) {
       pop @open while not {body => 1, section => 1, pre => 1}->{$open[-1]->local_name};
       unless ($open[-1]->local_name eq 'pre') {
         my $el = $doc->create_element ('pre');
