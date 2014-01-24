@@ -1,0 +1,128 @@
+#data
+aa
+<references/>xx
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "aa
+| "
+|     <mw references>
+|     <p>
+|       "xx"
+
+#data
+aa
+<references></references>xx
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "aa
+| "
+|     <mw references>
+|     <p>
+|       "xx"
+
+#data
+<references>hoge</references>xx
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw references>
+|       "hoge"
+|     <p>
+|       "xx"
+
+#data
+<references>ho<ref>ge</ref></references>xx
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw references>
+|       "ho"
+|       <mw ref>
+|         "ge"
+|     <p>
+|       "xx"
+
+#data
+<references group="footnotes">ho<ref>ge</ref></references>xx
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw references>
+|       group="footnotes"
+|       "ho"
+|       <mw ref>
+|         "ge"
+|     <p>
+|       "xx"
+
+#data
+<ref>aaa</ref>aa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw ref>
+|         "aaa"
+|       "aa"
+
+#data
+<ref name="abc">aaa</ref>aa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw ref>
+|         name="abc"
+|         "aaa"
+|       "aa"
+
+#data
+<ref name="abc"/>aa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw ref>
+|         name="abc"
+|       "aa"
+
+#data
+<ref name="abc"  />aa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw ref>
+|         name="abc"
+|       "aa"
