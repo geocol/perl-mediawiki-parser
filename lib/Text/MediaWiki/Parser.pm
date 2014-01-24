@@ -176,12 +176,26 @@ sub parse_char_string ($$$) {
           $insert_p->();
           $open[-1]->manakai_append_text ($1);
         }
-      } elsif ($data =~ s/^<(ref|gallery)>//) {
+      } elsif ($data =~ s/^<(gallery)\b((?>[^>"']|"[^"]*"|'[^']*')*)>//o) {
+        pop @open while not {body => 1, section => 1, li => 1, dt => 1, dd => 1, %$HTMLFlow, p => 0}->{$open[-1]->local_name};
+        my $el = $doc->create_element_ns (MWNS, 'mw:'.$1);
+        $set_attrs->($2 => $el);
+        $open[-1]->append_child ($el);
+        push @open, $el;
+        $data =~ s/^\s+//;
+        if (length $data) {
+          my $el = $doc->create_element_ns (MWNS, 'mw:l');
+          $el->set_attribute (embed => '');
+          $el->set_attribute (implied => '');
+          $open[-1]->append_child ($el);
+          push @open, $el;
+        }
+      } elsif ($data =~ s/^<(ref)>//) {
             $insert_p->() if $1 eq 'ref';
             my $el = $doc->create_element_ns (MWNS, 'mw:'.$1);
             $open[-1]->append_child ($el);
             push @open, $el;
-        } elsif ($data =~ s{^</(ref|gallery)>}{}) {
+        } elsif ($data =~ s{^</(ref)>}{}) {
             if ($open[-1]->local_name eq $1) {
                 pop @open;
             } else {
@@ -253,26 +267,26 @@ sub parse_char_string ($$$) {
             if ($data =~ s/^(border|frameless|frame|thumb(?:nail)?)(?=\||\]\])//) {
             $open[-1]->set_attribute (format => $1);
               next;
-            } elsif ($data =~ s/^([0-9]+)px(?=\||\]\])//) {
+            } elsif ($data =~ s/^([0-9]+)px(?=\||\]\]|\z)//) {
               $open[-1]->set_attribute (width => $1);
               next;
-            } elsif ($data =~ s/^x([0-9]+)px(?=\||\]\])//) {
+            } elsif ($data =~ s/^x([0-9]+)px(?=\||\]\]|\z)//) {
               $open[-1]->set_attribute (height => $1);
               next;
-            } elsif ($data =~ s/^([0-9]+)x([0-9]+)px(?=\||\]\])//) {
+            } elsif ($data =~ s/^([0-9]+)x([0-9]+)px(?=\||\]\]|\z)//) {
               $open[-1]->set_attribute (width => $1);
               $open[-1]->set_attribute (height => $2);
               next;
-            } elsif ($data =~ s/^(upright)(?=\||\]\])//) {
+            } elsif ($data =~ s/^(upright)(?=\||\]\]|\z)//) {
               $open[-1]->set_attribute (resizing => $1);
               next;
-            } elsif ($data =~ s/^(left|right|center|none)(?=\||\]\])//) {
+            } elsif ($data =~ s/^(left|right|center|none)(?=\||\]\]|\z)//) {
               $open[-1]->set_attribute (align => $1);
               next;
-            } elsif ($data =~ s/^(sub|super|top|text-top|middle|bottom|text-bottom)(?=\||\]\])//) {
+            } elsif ($data =~ s/^(sub|super|top|text-top|middle|bottom|text-bottom)(?=\||\]\]|\z)//) {
               $open[-1]->set_attribute (valign => $1);
               next;
-            } elsif ($data =~ s/^(link|alt|page|class|lang|thumb)=([^|\]]*)(?=\||\]\])//) {
+            } elsif ($data =~ s/^(link|alt|page|class|lang|thumb)=([^|\]]*)(?=\||\]\]|\z)//) {
               $open[-1]->set_attribute ($1 => $2);
               $open[-1]->set_attribute (format => 'thumb') if $1 eq 'thumb';
               next;
@@ -330,7 +344,7 @@ sub parse_char_string ($$$) {
             if $1 ne "\x0A" or
                $CanContainPhrasing->{$open[-1]->local_name};
       }
-  } # $data
+    } # $data
 
     if ($open[-1]->local_name eq 'xl') {
       if ($open[-1]->has_attribute ('bare')) {
@@ -351,6 +365,9 @@ sub parse_char_string ($$$) {
           }
         }
       }
+    } elsif ($open[-1]->local_name eq 'l' and
+             $open[-1]->has_attribute_ns (undef, 'implied')) {
+      pop @open;
     }
   };
 
@@ -363,6 +380,21 @@ sub parse_char_string ($$$) {
   for my $line (split /\x0A/, $data) {
     if (defined $nowiki or defined $current_tag) {
       $parse_inline->("\x0A" . $line);
+    } elsif ($open[-1]->local_name eq 'gallery') {
+      $line =~ s/^\s*//;
+      if ($line =~ s{^</gallery\s*>}{}) {
+        pop @open;
+        $parse_inline->($line);
+      } else {
+        $line = 'File:'.$line
+            if length $line and not $line =~ /^(?:File|Image):/;
+        my $el = $doc->create_element_ns (MWNS, 'mw:l');
+        $el->set_attribute (embed => '');
+        $el->set_attribute (implied => '');
+        $open[-1]->append_child ($el);
+        push @open, $el;
+        $parse_inline->($line);
+      }
     } elsif ($line =~ /^(={2,6})\s*(.+?)\s*\1$/s) {
       my $level = length $1;
       my $text = $2;

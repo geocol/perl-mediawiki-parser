@@ -1,0 +1,90 @@
+#data
+<gallery>
+</gallery>abc
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw gallery>
+|     <p>
+|       "abc"
+
+#data
+<gallery>
+File:hoge.png
+Image:fuga|aaa bbb
+aaa.png|none
+</gallery>abc
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw gallery>
+|       <mw l>
+|         embed=""
+|         implied=""
+|         "File:hoge.png"
+|       <mw l>
+|         embed=""
+|         implied=""
+|         wref="Image:fuga"
+|         "aaa bbb"
+|       <mw l>
+|         align="none"
+|         embed=""
+|         implied=""
+|         "File:aaa.png"
+|     <p>
+|       "abc"
+
+#data
+<gallery>
+File:hoge.png|aa'''bb'''[[cc]]
+</gallery>abc
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw gallery>
+|       <mw l>
+|         embed=""
+|         implied=""
+|         wref="File:hoge.png"
+|         "aa"
+|         <b>
+|           "bb"
+|         <mw l>
+|           "cc"
+|     <p>
+|       "abc"
+
+#data
+<gallery mode="traditional" widths="12px">
+File:hoge.png|aa'''bb'''[[cc]]
+</gallery>abc
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw gallery>
+|       mode="traditional"
+|       widths="12px"
+|       <mw l>
+|         embed=""
+|         implied=""
+|         wref="File:hoge.png"
+|         "aa"
+|         <b>
+|           "bb"
+|         <mw l>
+|           "cc"
+|     <p>
+|       "abc"
