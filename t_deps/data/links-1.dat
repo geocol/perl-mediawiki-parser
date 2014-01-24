@@ -21,7 +21,7 @@
 |   <body>
 |     <p>
 |       <mw l>
-|         lsrc="abc"
+|         wref="abc"
 |         "abcbb"
 |       <mw l>
 |         "cc"
@@ -62,7 +62,7 @@ abc]] bb
 |   <body>
 |     <p>
 |       <mw l>
-|         <mw lsrc>
+|         <mw wref>
 |           "a"
 |           <b>
 |             "bc]] bb"
@@ -110,7 +110,7 @@ aa[[a bc |de aaa]] bb
 |     <p>
 |       "aa"
 |       <mw l>
-|         lsrc="a bc "
+|         wref="a bc "
 |         "de aaa"
 |       " bb"
 
@@ -125,7 +125,7 @@ aa[[a bc |de aa|a]] b|b
 |     <p>
 |       "aa"
 |       <mw l>
-|         lsrc="a bc "
+|         wref="a bc "
 |         "de aa|a"
 |       " b|b"
 
@@ -140,7 +140,7 @@ aa[[a bc |de aa|a]]dd b|b
 |     <p>
 |       "aa"
 |       <mw l>
-|         lsrc="a bc "
+|         wref="a bc "
 |         "de aa|add"
 |       " b|b"
 
@@ -155,7 +155,7 @@ aa[[{{a bc }}|de {{aa}}'''a''']] bb
 |     <p>
 |       "aa"
 |       <mw l>
-|         <mw lsrc>
+|         <mw wref>
 |           <mw block>
 |             "a bc "
 |         "de "
@@ -176,7 +176,7 @@ aa[[{{a bc }}|de {{aa}}'''a''']]x bb
 |     <p>
 |       "aa"
 |       <mw l>
-|         <mw lsrc>
+|         <mw wref>
 |           <mw block>
 |             "a bc "
 |         "de "
@@ -197,7 +197,7 @@ aa[[{{a bc }}|de {{aa}}'''a''']]x bb
 |   <body>
 |     <p>
 |       <mw l>
-|         <mw lsrc>
+|         <mw wref>
 |           <mw block>
 |             "aaa"
 |         <mw block>
@@ -214,7 +214,7 @@ aa[[{{a bc }}|de {{aa}}'''a''']]x bb
 |   <body>
 |     <p>
 |       <mw l>
-|         <mw lsrc>
+|         <mw wref>
 |           <mw block>
 |             "aaa"
 |           "x"
@@ -249,6 +249,6 @@ abxs#REDIRECT [[abc]]z
 |     <p>
 |       "abxs"
 |       <mw l>
-|         lsrc="abc"
 |         redirect=""
+|         wref="abc"
 |         "abcz"

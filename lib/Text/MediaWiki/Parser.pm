@@ -21,7 +21,7 @@ my $CanContainPhrasing = {
   p => 1, b => 1, i => 1, a => 1, pre => 1,
   li => 1, dt => 1, dd => 1,
   ref => 1, gallery => 1, nowiki => 1,
-  block => 1, l => 1, lsrc => 1, comment => 1,
+  block => 1, l => 1, wref => 1, comment => 1,
 };
 
 sub new ($) {
@@ -104,18 +104,18 @@ sub parse_char_string ($$$) {
       } elsif ($data =~ s/^\]\]//) {
         if ($open[-1]->local_name eq 'l') {
           if ($data =~ s/^([^\s\[<{'&#]+)//) {
-            if ($open[-1]->has_attribute_ns (undef, 'lsrc') or
+            if ($open[-1]->has_attribute_ns (undef, 'wref') or
                 ($open[-1]->children->length and
-                 $open[-1]->children->[0]->local_name eq 'lsrc')) {
+                 $open[-1]->children->[0]->local_name eq 'wref')) {
               $open[-1]->manakai_append_text ($1);
             } else {
               if ($open[-1]->children->length) {
-                my $el = $doc->create_element_ns (MWNS, 'mw:lsrc');
+                my $el = $doc->create_element_ns (MWNS, 'mw:wref');
                 $el->append_child ($_->clone_node (1))
                     for ($open[-1]->child_nodes->to_list);
                 $open[-1]->insert_before ($el, $open[-1]->first_child);
               } else {
-                $open[-1]->set_attribute (lsrc => $open[-1]->text_content);
+                $open[-1]->set_attribute (wref => $open[-1]->text_content);
               }
               $open[-1]->manakai_append_text ($1);
             }
@@ -241,18 +241,18 @@ sub parse_char_string ($$$) {
         $open[-1]->manakai_append_text ("\x{200F}"); # RKM
       } elsif ($data =~ s/^\|//) {
         if ($open[-1]->local_name eq 'l') {
-          if ($open[-1]->has_attribute_ns (undef, 'lsrc') or
+          if ($open[-1]->has_attribute_ns (undef, 'wref') or
               ($open[-1]->children->length and
-               $open[-1]->children->[0]->local_name eq 'lsrc')) {
+               $open[-1]->children->[0]->local_name eq 'wref')) {
             $insert_p->();
             $open[-1]->manakai_append_text ('|');
           } else {
             if ($open[-1]->children->length) {
-              my $el = $doc->create_element_ns (MWNS, 'mw:lsrc');
+              my $el = $doc->create_element_ns (MWNS, 'mw:wref');
               $el->append_child ($_) for ($open[-1]->child_nodes->to_list);
               $open[-1]->append_child ($el);
             } else {
-              $open[-1]->set_attribute (lsrc => $open[-1]->text_content);
+              $open[-1]->set_attribute (wref => $open[-1]->text_content);
               $open[-1]->text_content ('');
             }
           }
