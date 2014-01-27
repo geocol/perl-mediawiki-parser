@@ -1,0 +1,6 @@
+- "../../modules/wanage" tests wp datetime
+- "../../modules/web-url" tests
+- "../../modules/web-encodings" tests
+- "../../modules/web-dom" tests
+- "../../modules/web-markup" tests
+
