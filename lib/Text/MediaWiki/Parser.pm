@@ -137,16 +137,15 @@ sub parse_char_string ($$$) {
         my $el = $doc->create_element_ns (MWNS, 'mw:xl');
         $open[-1]->append_child ($el);
         push @open, $el;
-      } elsif ($data =~ s/^http://) {
+      } elsif ($data =~ s{^(https?://[A-Za-z0-9_:;.,()/?#\$&+*~=-]+)}{}) {
         if ($open[-1]->local_name eq 'xl') {
-          $open[-1]->manakai_append_text ('http:');
+          $open[-1]->manakai_append_text ($1);
         } else {
           $insert_p->();
           my $el = $doc->create_element_ns (MWNS, 'mw:xl');
+          $el->set_attribute (bare => '');
+          $el->manakai_append_text ($1);
           $open[-1]->append_child ($el);
-          push @open, $el;
-          $open[-1]->set_attribute (bare => '');
-          $open[-1]->manakai_append_text ('http:');
         }
       } elsif ($data =~ s/^<($HTMLPhrasingPattern)\b((?>[^>"']|"[^"]*"|'[^']*')*)>//o) {
         $insert_p->();
@@ -416,10 +415,7 @@ sub parse_char_string ($$$) {
         $open[-1]->append_child ($el);
       } elsif ($data =~ s/^(\s)//) {
         if ($open[-1]->local_name eq 'xl') {
-          if ($open[-1]->has_attribute ('bare')) {
-            pop @open;
-            #
-          } elsif (($open[-1]->has_attribute_ns (undef, 'href') or
+          if (($open[-1]->has_attribute_ns (undef, 'href') or
                    ($open[-1]->children->length and
                     $open[-1]->children->[0]->local_name eq 'href'))) {
             #
@@ -449,22 +445,18 @@ sub parse_char_string ($$$) {
     } # $data
 
     if ($open[-1]->local_name eq 'xl') {
-      if ($open[-1]->has_attribute ('bare')) {
-        pop @open;
+      if (($open[-1]->has_attribute_ns (undef, 'href') or
+           ($open[-1]->children->length and
+            $open[-1]->children->[0]->local_name eq 'href'))) {
+        #
       } else {
-        if (($open[-1]->has_attribute_ns (undef, 'href') or
-             ($open[-1]->children->length and
-              $open[-1]->children->[0]->local_name eq 'href'))) {
-          #
+        if ($open[-1]->children->length) {
+          my $el = $doc->create_element_ns (MWNS, 'mw:href');
+          $el->append_child ($_) for ($open[-1]->child_nodes->to_list);
+          $open[-1]->append_child ($el);
         } else {
-          if ($open[-1]->children->length) {
-            my $el = $doc->create_element_ns (MWNS, 'mw:href');
-            $el->append_child ($_) for ($open[-1]->child_nodes->to_list);
-            $open[-1]->append_child ($el);
-          } else {
-            $open[-1]->set_attribute (href => $open[-1]->text_content);
-            $open[-1]->text_content ('');
-          }
+          $open[-1]->set_attribute (href => $open[-1]->text_content);
+          $open[-1]->text_content ('');
         }
       }
     } elsif ($open[-1]->local_name eq 'l' and

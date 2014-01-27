@@ -163,14 +163,10 @@ as
 |   <head>
 |   <body>
 |     <p>
-|       "ab "
-|       <mw xl>
-|         bare=""
-|         "http://"
-|         <mw include>
-|           wref="hoge"
-|         "/?fuga#abc"
-|       "
+|       "ab http://"
+|       <mw include>
+|         wref="hoge"
+|       "/?fuga#abc
 | as"
 
 #data
@@ -185,3 +181,26 @@ as
 |       <mw nowiki>
 |         "http://hoge/"
 |       "a"
+
+#data
+{{cite web|url=http://hogeohge/index.html|title=foobar|abc}}aa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="cite web"
+|       <mw iparam>
+|         name="url"
+|         <mw xl>
+|           bare=""
+|           "http://hogeohge/index.html"
+|       <mw iparam>
+|         name="title"
+|         "foobar"
+|       <mw iparam>
+|         "abc"
+|     <p>
+|       "aa"
