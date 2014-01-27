@@ -24,7 +24,7 @@ sub top_url ($;$) {
   return $_[0]->{top_url};
 } # top_url
 
-sub get_source_text_by_name ($$) {
+sub get_source_text_by_name_as_cv ($$) {
   my ($self, $name) = @_;
   my $url = $self->top_url;
   $url .= '/' unless $url =~ m{/\z};

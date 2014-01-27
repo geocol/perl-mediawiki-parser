@@ -12,7 +12,7 @@ my $cv = AE::cv;
 my $word = decode 'utf-8', shift;
 
 my $mw = AnyEvent::MediaWiki::Source->new_wikipedia_by_lang ('ja');
-$mw->get_source_text_by_name ($word)->cb (sub {
+$mw->get_source_text_by_name_as_cv ($word)->cb (sub {
   my $data = $_[0]->recv;
   if (defined $data) {
     my $doc = new Web::DOM::Document;
