@@ -75,3 +75,54 @@
 |         thumb="abc"
 |         wref="File:hgohehoge"
 |         "caaaa"
+
+#data
+[[ファイル:hgohehoge.png|thumb|12x42px|hogea a]]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw l>
+|         embed=""
+|         format="thumb"
+|         height="42"
+|         width="12"
+|         wref="ファイル:hgohehoge.png"
+|         "hogea a"
+
+#data
+[[Fichier:hgohe hoge.jpg|thumb|12x42px|hogea a]]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw l>
+|         embed=""
+|         format="thumb"
+|         height="42"
+|         width="12"
+|         wref="Fichier:hgohe hoge.jpg"
+|         "hogea a"
+
+#data
+[[ファイル:hgohehoge.JPG|thumb|12x42px|hogea a]]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw l>
+|         embed=""
+|         format="thumb"
+|         height="42"
+|         width="12"
+|         wref="ファイル:hgohehoge.JPG"
+|         "hogea a"

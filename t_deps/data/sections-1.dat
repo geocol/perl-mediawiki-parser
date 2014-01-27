@@ -158,3 +158,74 @@ aaaa
 |       <hr>
 |       <p>
 |         "bb"
+
+#data
+| = h =
+| aa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <h1>
+|       "h"
+|     <p>
+|       "aa"
+
+#data
+| == foo ==
+| = h =
+| aa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <section>
+|       <h1>
+|         "foo"
+|     <h1>
+|       "h"
+|     <p>
+|       "aa"
+
+#data
+| #abc
+| = h =
+| aa
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <ol>
+|       <li>
+|         "abc"
+|     <h1>
+|       "h"
+|     <p>
+|       "aa"
+
+#data
+| {|
+| |
+| = h =
+| aa
+| |}
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <h1>
+|               "h"
+|             "
+| aa"

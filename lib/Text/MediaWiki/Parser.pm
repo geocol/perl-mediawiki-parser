@@ -95,7 +95,8 @@ sub parse_char_string ($$$) {
         } else {
           $insert_p->();
           my $el = $doc->create_element_ns (MWNS, 'mw:l');
-          $el->set_attribute ('embed' => '') if $data =~ /^(?:File:|Image:)/;
+          $el->set_attribute ('embed' => '')
+              if $data =~ /^(?:File:|Image:|[^:]+:[^|\[\]]+\.(?i:jpe?g|gif|png)(?=[|\]]))/;
           $open[-1]->append_child ($el);
           push @open, $el;
         }
@@ -107,7 +108,7 @@ sub parse_char_string ($$$) {
         push @open, $el;
       } elsif ($data =~ s/^\]//) {
         if ($open[-1]->local_name eq 'l' and $data =~ s/^\]//) {
-          if ($data =~ s/^([^\s\[<{'&#]+)//) {
+          if ($data =~ s/^([A-Za-z0-9_-]+)//) {
             if ($open[-1]->has_attribute_ns (undef, 'wref') or
                 ($open[-1]->children->length and
                  $open[-1]->children->[0]->local_name eq 'wref')) {
@@ -375,7 +376,7 @@ sub parse_char_string ($$$) {
                  $data =~ s/^\|\s*//) {
           pop @open;
           my $el = $doc->create_element ('td');
-          if ($data =~ s/^((?>[^|"'<]|"[^"]*"|'[^']*')*)\|(?!\|)\s*//) {
+          if ($data =~ s/^((?>[^|"'<|{\[]|"[^"]*"|'[^']*')*)\|(?!\|)\s*//) {
               $set_attrs->($1 => $el);
           }
           $el->set_user_data (level => 1);
@@ -399,7 +400,7 @@ sub parse_char_string ($$$) {
           $data =~ s/^\s+//;
           pop @open;
           my $el = $doc->create_element ('th');
-          if ($data =~ s/^((?>[^|"'<]|"[^"]*"|'[^']*')*)\|(?!\|)\s*//) {
+          if ($data =~ s/^((?>[^|"'<{\[]|"[^"]*"|'[^']*')*)\|(?!\|)\s*//) {
               $set_attrs->($1 => $el);
           }
           $el->set_user_data (level => 1);
@@ -488,7 +489,7 @@ sub parse_char_string ($$$) {
         $parse_inline->($line);
       } else {
         $line = 'File:'.$line
-            if length $line and not $line =~ /^(?:File|Image):/;
+            if length $line and not $line =~ /^(?:File:|Image:|[^:]+:[^|\[\]]+\.(?i:jpe?g|gif|png)(?=[|\]]))/;
         my $el = $doc->create_element_ns (MWNS, 'mw:l');
         $el->set_attribute (embed => '');
         $el->set_attribute (implied => '');
@@ -496,12 +497,18 @@ sub parse_char_string ($$$) {
         push @open, $el;
         $parse_inline->($line);
       }
-    } elsif ($line =~ /^(={2,6})\s*(.+?)\s*\1$/s) {
+    } elsif ($open[-1]->local_name eq 'iparam' and
+             not $open[-1]->has_attribute_ns (undef, 'name') and
+             $line =~ s/^\s*([^<\{\}\[\]|!\s=]+)\s*=\s*//) {
+      $open[-1]->set_attribute (name => $1);
+      $parse_inline->($line);
+    } elsif ($line =~ /^(={1,6})\s*(.+?)\s*\1$/s) {
       my $level = length $1;
       my $text = $2;
       pop @open while not ({body => 1, section => 1, includeonly => 1, noinclude => 1, table => 1, caption => 1,
                             td => 1, th => 1}->{$open[-1]->local_name} and
-                           $open[-1]->get_user_data ('level') < $level);
+                           ($open[-1]->get_user_data ('level') < $level or
+                            $open[-1]->get_user_data ('level') == 1));
       my $next_level = $open[-1]->get_user_data ('level');
       $next_level++;
       while ($next_level < $level) {
@@ -512,13 +519,17 @@ sub parse_char_string ($$$) {
         $next_level++;
       }
 
-      my $el0 = $doc->create_element ('section');
-      $el0->set_user_data (level => $level);
       my $el = $doc->create_element ('h1');
-      $el0->append_child ($el);
       $el->manakai_append_text ($text);
-      $open[-1]->append_child ($el0);
-      push @open, $el0;
+      if ($level == 1) {
+        $open[-1]->append_child ($el);
+      } else {
+        my $el0 = $doc->create_element ('section');
+        $el0->set_user_data (level => $level);
+        $el0->append_child ($el);
+        $open[-1]->append_child ($el0);
+        push @open, $el0;
+      }
     } elsif ($line =~ /^([*#:;]+)\s*(.+)$/s) {
       my $level = length $1;
       my $text = $2;
@@ -557,7 +568,8 @@ sub parse_char_string ($$$) {
         push @open, $el0, $el;
         $next_level++;
       }
-      if ($text =~ s/^([^:]*)://) {
+      if ({dt => 1, dd => 1}->{$open[-1]->local_name} and
+          $text =~ s/^([^:]*)://) {
         $parse_inline->($1);
         pop @open;
         my $el = $doc->create_element ('dd');
@@ -591,15 +603,22 @@ sub parse_char_string ($$$) {
       }
     } elsif ($line =~ s/^\s*\{\|\s*//) {
       my $el = $doc->create_element ('table');
-      $set_attrs->($line => $el);
+      if ($line =~ s/^((?>[^|"'<{\[]|"[^"]*"|'[^']*')*)//) {
+        $set_attrs->($1 => $el);
+      }
       $open[-1]->append_child ($el);
       push @open, $el;
       $in_table++;
-    } elsif ($in_table and $line =~ s/^\s*\|\}\s*//) {
-      pop @open while not ($open[-1]->local_name eq 'table');
-      pop @open; # table
-      $in_table--;
       $parse_inline->($line);
+    } elsif ($line =~ s/^\s*\|\}\s*//) {
+      if ($in_table) {
+        pop @open while not ($open[-1]->local_name eq 'table');
+        pop @open; # table
+        $in_table--;
+        $parse_inline->($line);
+      } else {
+        $parse_inline->($line);
+      }
     } elsif ($in_table and $line =~ s/^\s*\|-\s*//) {
       pop @open while not {table => 1, thead => 1, tbody => 1, tfoot => 1}->{$open[-1]->local_name};
       if ($open[-1]->local_name eq 'table') {
@@ -612,9 +631,9 @@ sub parse_char_string ($$$) {
       $open[-1]->append_child ($el);
       push @open, $el;
     } elsif ($in_table and $line =~ s/^\s*\|\+\s*//) {
-      push @open while not $open[-1]->local_name eq 'table';
+      pop @open while not $open[-1]->local_name eq 'table';
       my $el = $doc->create_element ('caption');
-      if ($line =~ s/^((?>[^|"'<]|"[^"]*"|'[^']*')*)\|(?!\|)\s*//) {
+      if ($line =~ s/^((?>[^|"'<{\[]|"[^"]*"|'[^']*')*)\|(?!\|)\s*//) {
         $set_attrs->($1 => $el);
       }
       $open[-1]->append_child ($el);
@@ -639,7 +658,7 @@ sub parse_char_string ($$$) {
         push @open, $el; # tr
       }
       my $el = $doc->create_element ($type);
-      if ($line =~ s/^((?>[^|"'<]|"[^"]*"|'[^']*')*)\|(?!\|)\s*//) {
+      if ($line =~ s/^((?>[^|"'<{\[]|"[^"]*"|'[^']*')*)\|(?!\|)\s*//) {
         $set_attrs->($1 => $el);
       }
       $el->set_user_data (level => 1);

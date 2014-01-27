@@ -168,8 +168,7 @@ abc  =|abc
 |     <mw include>
 |       wref="Hoge Fuga"
 |       <mw iparam>
-|         "
-| abc  ="
+|         name="abc"
 |       <mw iparam>
 |         "abc
 | = vvv"

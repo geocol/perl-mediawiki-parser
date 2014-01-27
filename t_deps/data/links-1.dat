@@ -252,3 +252,16 @@ abxs#REDIRECT [[abc]]z
 |         redirect=""
 |         wref="abc"
 |         "abcz"
+
+#data
+[[abc]]あいうえ
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw l>
+|         "abc"
+|       "あいうえ"

@@ -260,3 +260,23 @@ bb
 |         "fuga"
 |       <dd>
 |         "aaa"
+
+#data
+| * [http://foo/ bar]
+| # [http://hoge/ fauga]
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <ul>
+|       <li>
+|         <mw xl>
+|           href="http://foo/"
+|           "bar"
+|     <ol>
+|       <li>
+|         <mw xl>
+|           href="http://hoge/"
+|           "fauga"

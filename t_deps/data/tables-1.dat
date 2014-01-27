@@ -787,3 +787,154 @@ abc
 |     <table>
 |       <caption>
 |         "a||bb="f||oo" c='a|b'|cc"
+
+#data
+| {|
+| |{{aa|bb}}abc
+| |}
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <mw include>
+|               wref="aa"
+|               <mw iparam>
+|                 "bb"
+|             "abc"
+
+#data
+| {|
+| !{{aa|bb}}abc
+| |}
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <th>
+|             <mw include>
+|               wref="aa"
+|               <mw iparam>
+|                 "bb"
+|             "abc"
+
+#data
+| {|
+| |+{{aa|bb}}abc
+| |}
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <table>
+|       <caption>
+|         <mw include>
+|           wref="aa"
+|           <mw iparam>
+|             "bb"
+|         "abc"
+
+#data
+| {|
+| |a||{{aa|bb}}abc
+| |}
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             "a"
+|           <td>
+|             <mw include>
+|               wref="aa"
+|               <mw iparam>
+|                 "bb"
+|             "abc"
+
+#data
+| {|
+| |a!!{{aa|bb}}abc
+| |}
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             "a"
+|           <th>
+|             <mw include>
+|               wref="aa"
+|               <mw iparam>
+|                 "bb"
+|             "abc"
+
+#data
+| {|
+| |[[aa|bb]]あ
+| |}
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <mw l>
+|               wref="aa"
+|               "bb"
+|             "あ"
+
+#data
+| {| {{abc}}
+| |ab
+| |}
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <table>
+|       <mw include>
+|         wref="abc"
+|       <tbody>
+|         <tr>
+|           <td>
+|             "ab"
+
+#data
+| |}
+| abc
+#document
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "abc"
