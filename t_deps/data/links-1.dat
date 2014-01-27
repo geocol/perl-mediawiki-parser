@@ -156,11 +156,11 @@ aa[[{{a bc }}|de {{aa}}'''a''']] bb
 |       "aa"
 |       <mw l>
 |         <mw wref>
-|           <mw block>
-|             "a bc "
+|           <mw include>
+|             wref="a bc "
 |         "de "
-|         <mw block>
-|           "aa"
+|         <mw include>
+|           wref="aa"
 |         <b>
 |           "a"
 |       " bb"
@@ -177,11 +177,11 @@ aa[[{{a bc }}|de {{aa}}'''a''']]x bb
 |       "aa"
 |       <mw l>
 |         <mw wref>
-|           <mw block>
-|             "a bc "
+|           <mw include>
+|             wref="a bc "
 |         "de "
-|         <mw block>
-|           "aa"
+|         <mw include>
+|           wref="aa"
 |         <b>
 |           "a"
 |         "x"
@@ -198,10 +198,10 @@ aa[[{{a bc }}|de {{aa}}'''a''']]x bb
 |     <p>
 |       <mw l>
 |         <mw wref>
-|           <mw block>
-|             "aaa"
-|         <mw block>
-|           "aaa"
+|           <mw include>
+|             wref="aaa"
+|         <mw include>
+|           wref="aaa"
 |         "b"
 
 #data
@@ -215,11 +215,11 @@ aa[[{{a bc }}|de {{aa}}'''a''']]x bb
 |     <p>
 |       <mw l>
 |         <mw wref>
-|           <mw block>
-|             "aaa"
+|           <mw include>
+|             wref="aaa"
 |           "x"
-|         <mw block>
-|           "aaa"
+|         <mw include>
+|           wref="aaa"
 |         "xb"
 
 #data
@@ -232,8 +232,8 @@ aa[[{{a bc }}|de {{aa}}'''a''']]x bb
 |   <body>
 |     <p>
 |       <mw l>
-|         <mw block>
-|           "aaa"
+|         <mw include>
+|           wref="aaa"
 |         "x"
 |       <mw nowiki>
 |       "b"

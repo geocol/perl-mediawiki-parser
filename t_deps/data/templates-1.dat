@@ -1,187 +1,203 @@
 #data
-[http://foo/]
-#document
+{{hoge}}
+#document escaped
 | <html>
 |   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
-|     <p>
-|       <mw xl>
-|         "http://foo/"
+|     <mw include>
+|       wref="hoge"
 
 #data
-a[http://foo/]b
-#document
+{{:hoge}}
+#document escaped
 | <html>
 |   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
-|     <p>
-|       "a"
-|       <mw xl>
-|         "http://foo/"
-|       "b"
+|     <mw include>
+|       wref=":hoge"
 
 #data
-[http://foo/   ]
-#document
+{{Hoge:fuga}}
+#document escaped
 | <html>
 |   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
-|     <p>
-|       <mw xl>
-|         href="http://foo/"
+|     <mw include>
+|       wref="Hoge:fuga"
 
 #data
-[http://foo/   abc  def]
-#document
+{{Hoge Fuga: abc}}
+#document escaped
 | <html>
 |   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
-|     <p>
-|       <mw xl>
-|         href="http://foo/"
-|         "abc  def"
+|     <mw include>
+|       wref="Hoge Fuga: abc"
 
 #data
-[ftp://foo/   abc  def]
-#document
+{{subst:Hoge}}
+#document escaped
 | <html>
 |   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
-|     <p>
-|       <mw xl>
-|         href="ftp://foo/"
-|         "abc  def"
+|     <mw include>
+|       command="subst"
+|       wref="Hoge"
 
 #data
-[http://foo/   abc  de{{aa}}f]
-#document
+{{safesubst:Hoge}}
+#document escaped
 | <html>
 |   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
-|     <p>
-|       <mw xl>
-|         href="http://foo/"
-|         "abc  de"
-|         <mw include>
-|           wref="aa"
-|         "f"
+|     <mw include>
+|       command="safesubst"
+|       wref="Hoge"
 
 #data
-[{{http}}://foo/   abc  de{{aa}}f]
-#document
+{{msgnw:Hoge}}
+#document escaped
 | <html>
 |   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
-|     <p>
-|       <mw xl>
-|         <mw href>
-|           <mw include>
-|             wref="http"
-|           "://foo/"
-|         "abc  de"
-|         <mw include>
-|           wref="aa"
-|         "f"
+|     <mw include>
+|       command="msgnw"
+|       wref="Hoge"
 
 #data
-http://hoge/?fuga#abc
-#document
+{{subst::Hoge}}
+#document escaped
 | <html>
 |   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
-|     <p>
-|       <mw xl>
-|         bare=""
-|         "http://hoge/?fuga#abc"
+|     <mw include>
+|       command="subst"
+|       wref=":Hoge"
 
 #data
-abchttp://hoge/?fuga#abc
-#document
+abc{{subst::Hoge}}
+#document escaped
 | <html>
 |   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
 |     <p>
-|       "abchttp://hoge/?fuga#abc"
+|       "abc"
+|       <mw include>
+|         command="subst"
+|         wref=":Hoge"
 
 #data
-ab http://hoge/?fuga#abc  as
-#document
+{{Hoge Fuga|abc}}x
+#document escaped
 | <html>
 |   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
+|     <mw include>
+|       wref="Hoge Fuga"
+|       <mw iparam>
+|         "abc"
 |     <p>
-|       "ab "
-|       <mw xl>
-|         bare=""
-|         "http://hoge/?fuga#abc"
-|       "  as"
+|       "x"
 
 #data
-ab http://hoge/?fuga#abc
-as
-#document
+{{Hoge Fuga|abc||def}}x
+#document escaped
 | <html>
 |   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
+|     <mw include>
+|       wref="Hoge Fuga"
+|       <mw iparam>
+|         "abc"
+|       <mw iparam>
+|       <mw iparam>
+|         "def"
 |     <p>
-|       "ab "
-|       <mw xl>
-|         bare=""
-|         "http://hoge/?fuga#abc"
+|       "x"
+
+#data
+{{Hoge Fuga|abc|aaa  = bbr }}x
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="Hoge Fuga"
+|       <mw iparam>
+|         "abc"
+|       <mw iparam>
+|         name="aaa"
+|         "bbr "
+|     <p>
+|       "x"
+
+#data
+{{Hoge Fuga|
+abc  =|abc
+= vvv}}x
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="Hoge Fuga"
+|       <mw iparam>
+|         "
+| abc  ="
+|       <mw iparam>
+|         "abc
+| = vvv"
+|     <p>
+|       "x"
+
+#data
+{{Hoge Fuga
+|abc  =||
+|z= vvv}}x
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="Hoge Fuga"
 |       "
-| as"
-
-#data
-ab http://{{hoge}}/?fuga#abc
-as
-#document
-| <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
-|   xmlns xmlns="http://www.w3.org/1999/xhtml"
-|   <head>
-|   <body>
+| "
+|       <mw iparam>
+|         name="abc"
+|       <mw iparam>
+|       <mw iparam>
+|         "
+| "
+|       <mw iparam>
+|         name="z"
+|         "vvv"
 |     <p>
-|       "ab "
-|       <mw xl>
-|         bare=""
-|         "http://"
-|         <mw include>
-|           wref="hoge"
-|         "/?fuga#abc"
-|       "
-| as"
-
-#data
-<nowiki>http://hoge/</nowiki>a
-#document
-| <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
-|   xmlns xmlns="http://www.w3.org/1999/xhtml"
-|   <head>
-|   <body>
-|     <p>
-|       <mw nowiki>
-|         "http://hoge/"
-|       "a"
+|       "x"

@@ -1,0 +1,134 @@
+#data
+{{CURRENTDAYNAME}}
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="CURRENTDAYNAME"
+
+#data
+{{CURRENTDAYNAME|x}}
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="CURRENTDAYNAME"
+|       <mw iparam>
+|         "x"
+
+#data
+{{PROTECTIONLEVEL}}
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="PROTECTIONLEVEL"
+
+#data
+{{URLENCODE:{{REVISIONUSER}}|WIKI}}
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="URLENCODE"
+|       <mw include>
+|         wref="REVISIONUSER"
+|       <mw iparam>
+|         "WIKI"
+
+#data
+{{DEFAULTSORT:hoge fuga|noreplace}}
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="DEFAULTSORT"
+|       "hoge fuga"
+|       <mw iparam>
+|         "noreplace"
+
+#data
+{{DEFAULTSORT:hoge fuga|noreplace|foo\bar}}
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="DEFAULTSORT"
+|       "hoge fuga"
+|       <mw iparam>
+|         "noreplace"
+|       <mw iparam>
+|         "foo\bar"
+
+#data
+| {{#switch:{{PAGENAME}}
+| | ho'aaa = agfwq
+| | ge&apos;age = afewe
+| | ge&#39;age = afewe
+| }}
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="#switch"
+|       <mw include>
+|         wref="PAGENAME"
+|       "
+| "
+|       <mw iparam>
+|         name="ho'aaa"
+|         "agfwq
+| "
+|       <mw iparam>
+|         name="ge&apos;age"
+|         "afewe
+| "
+|       <mw iparam>
+|         name="ge&#39;age"
+|         "afewe
+| "
+
+#data
+{{ns:-1}}
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="ns"
+|       "-1"
+
+#data
+{{fafagegewa:-1 abc}}
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="fafagegewa"
+|       "-1 abc"
