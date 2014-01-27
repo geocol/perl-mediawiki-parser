@@ -8,9 +8,13 @@ XXX
 
 =head1 SEE ALSO
 
+Help:Contents <http://www.mediawiki.org/wiki/Help:Contents>.
+
 Help:Formatting <http://www.mediawiki.org/wiki/Help:Formatting>.
 
 Help:Links <http://www.mediawiki.org/wiki/Help:Links>.
+
+Help:Categories <http://www.mediawiki.org/wiki/Help:Categories>.
 
 Help:Lists <http://www.mediawiki.org/wiki/Help:Lists>.
 
@@ -24,5 +28,7 @@ Extension:Cite/Cite.php
 Help:Wiki markup <http://en.wikipedia.org/wiki/Help:Wiki_markup>.
 
 Help:Section <http://en.wikipedia.org/wiki/Help:Section>.
+
+Help:Magic words <http://www.mediawiki.org/wiki/Help:Magic_words>.
 
 =cut

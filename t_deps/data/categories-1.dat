@@ -1,0 +1,41 @@
+#data
+[[Category:abc]] bb
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw category>
+|       name="abc"
+|     <p>
+|       " bb"
+
+#data
+[[Category:abc|abc| def]] bb
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw category>
+|       name="abc"
+|       sortkey="abc| def"
+|     <p>
+|       " bb"
+
+#data
+x[[Category:abc|abc| def]] bb
+#document escaped
+| <html>
+|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "x"
+|       <mw category>
+|         name="abc"
+|         sortkey="abc| def"
+|       " bb"

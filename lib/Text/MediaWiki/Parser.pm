@@ -96,11 +96,18 @@ sub parse_char_string ($$$) {
                 $open[-1]->manakai_append_text ('}}');
             }
       } elsif ($data =~ s/^\[\[//) {
-        $insert_p->();
-        my $el = $doc->create_element_ns (MWNS, 'mw:l');
-        $el->set_attribute ('embed' => '') if $data =~ /^(?:File:|Image:)/;
-        $open[-1]->append_child ($el);
-        push @open, $el;
+        if ($data =~ s/^Category:([^|\]]+)(?:\|([^\]]+)|)\]\]//) {
+          my $el = $doc->create_element_ns (MWNS, 'mw:category');
+          $el->set_attribute (name => $1);
+          $el->set_attribute (sortkey => $2) if defined $2;
+          $open[-1]->append_child ($el);
+        } else {
+          $insert_p->();
+          my $el = $doc->create_element_ns (MWNS, 'mw:l');
+          $el->set_attribute ('embed' => '') if $data =~ /^(?:File:|Image:)/;
+          $open[-1]->append_child ($el);
+          push @open, $el;
+        }
       } elsif ($data =~ s/^#REDIRECT\s*\[\[//) {
         $insert_p->();
         my $el = $doc->create_element_ns (MWNS, 'mw:l');
@@ -342,6 +349,10 @@ sub parse_char_string ($$$) {
           $insert_p->();
           $open[-1]->manakai_append_text ('!!');
         }
+      } elsif ($data =~ s/^__([A-Z]+)__//) {
+        my $el = $doc->create_element_ns (MWNS, 'mw:behavior');
+        $el->set_attribute (name => $1);
+        $open[-1]->append_child ($el);
       } elsif ($data =~ s/^(\s)//) {
         if ($open[-1]->local_name eq 'xl') {
           if ($open[-1]->has_attribute ('bare')) {
@@ -368,7 +379,7 @@ sub parse_char_string ($$$) {
         $open[-1]->manakai_append_text ($1)
             if $1 ne "\x0A" or
                $CanContainPhrasing->{$open[-1]->local_name};
-      } elsif ($data =~ s/^([^&'<\{\}\[\]|!#\s]+)// or $data =~ s/^(.)//s) {
+      } elsif ($data =~ s/^([^&'<\{\}\[\]|!_#\s]+)// or $data =~ s/^(.)//s) {
         $insert_p->() unless $1 eq "\x0A";
         $open[-1]->manakai_append_text ($1)
             if $1 ne "\x0A" or
