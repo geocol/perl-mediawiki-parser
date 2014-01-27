@@ -16,6 +16,8 @@ Help:Lists <http://www.mediawiki.org/wiki/Help:Lists>.
 
 Help:Images <http://www.mediawiki.org/wiki/Help:Images>.
 
+Help:Tables <http://www.mediawiki.org/wiki/Help:Tables>.
+
 Extension:Cite/Cite.php
 <http://www.mediawiki.org/wiki/Extension:Cite/Cite.php>.
 

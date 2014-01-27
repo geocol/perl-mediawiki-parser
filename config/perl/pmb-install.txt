@@ -66,6 +66,7 @@ WWW::RobotRules~6.02
 Unicode::Stringprep~1.104
 LWP~6.05
 Module::Metadata~1.000019
+Scalar::Util~1.38
 Encode::Locale~1.03
 HTTP::Negotiate~6.01
 LWP::Protocol::https~6.04

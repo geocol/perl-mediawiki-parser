@@ -33,6 +33,8 @@ sub new ($) {
 sub parse_char_string ($$$) {
   my ($self, $data => $doc) = @_;
 
+  $doc->manakai_is_html (0);
+  $doc->strict_error_checking (0);
   $doc->inner_html ('<html xmlns="http://www.w3.org/1999/xhtml" xmlns:mw="'.MWNS.'"><head></head><body></body></html>');
 
   my @open = ($doc->body);
@@ -311,9 +313,34 @@ sub parse_char_string ($$$) {
               $open[-1]->text_content ('');
             }
           }
+        } elsif ({td => 1, th => 1}->{$open[-1]->local_name} and
+                 $data =~ s/^\|\s*//) {
+          pop @open;
+          my $el = $doc->create_element ('td');
+          if ($data =~ s/^((?>[^|"'<]|"[^"]*"|'[^']*')*)\|(?!\|)\s*//) {
+              $set_attrs->($1 => $el);
+          }
+          $el->set_user_data (level => 1);
+          $open[-1]->append_child ($el);
+          push @open, $el;
         } else {
           $insert_p->();
           $open[-1]->manakai_append_text ('|');
+        }
+      } elsif ($data =~ s/^!!//) {
+        if ({td => 1, th => 1}->{$open[-1]->local_name}) {
+          $data =~ s/^\s+//;
+          pop @open;
+          my $el = $doc->create_element ('th');
+          if ($data =~ s/^((?>[^|"'<]|"[^"]*"|'[^']*')*)\|(?!\|)\s*//) {
+              $set_attrs->($1 => $el);
+          }
+          $el->set_user_data (level => 1);
+          $open[-1]->append_child ($el);
+          push @open, $el;
+        } else {
+          $insert_p->();
+          $open[-1]->manakai_append_text ('!!');
         }
       } elsif ($data =~ s/^(\s)//) {
         if ($open[-1]->local_name eq 'xl') {
@@ -341,7 +368,7 @@ sub parse_char_string ($$$) {
         $open[-1]->manakai_append_text ($1)
             if $1 ne "\x0A" or
                $CanContainPhrasing->{$open[-1]->local_name};
-      } elsif ($data =~ s/^([^&'<\{\}\[\]|#\s]+)// or $data =~ s/^(.)//s) {
+      } elsif ($data =~ s/^([^&'<\{\}\[\]|!#\s]+)// or $data =~ s/^(.)//s) {
         $insert_p->() unless $1 eq "\x0A";
         $open[-1]->manakai_append_text ($1)
             if $1 ne "\x0A" or
@@ -516,6 +543,9 @@ sub parse_char_string ($$$) {
     } elsif ($in_table and $line =~ s/^\s*\|\+\s*//) {
       push @open while not $open[-1]->local_name eq 'table';
       my $el = $doc->create_element ('caption');
+      if ($line =~ s/^((?>[^|"'<]|"[^"]*"|'[^']*')*)\|(?!\|)\s*//) {
+        $set_attrs->($1 => $el);
+      }
       $open[-1]->append_child ($el);
       push @open, $el;
       $parse_inline->($line);
@@ -538,15 +568,13 @@ sub parse_char_string ($$$) {
         push @open, $el; # tr
       }
       my $el = $doc->create_element ($type);
+      if ($line =~ s/^((?>[^|"'<]|"[^"]*"|'[^']*')*)\|(?!\|)\s*//) {
+        $set_attrs->($1 => $el);
+      }
       $el->set_user_data (level => 1);
       $open[-1]->append_child ($el);
       push @open, $el;
       $parse_inline->($line);
-
-# XXX caption attrs
-# XXX cell attrs
-# XXX multiline attrs
-# XXX cells in oneline
     } elsif ($line =~ /^----$/) {
       pop @open while not {body => 1, section => 1, table => 1, caption => 1,
                            td => 1, th => 1}->{$open[-1]->local_name};
@@ -568,6 +596,8 @@ sub parse_char_string ($$$) {
       $parse_inline->("\x0A" . $line);
     }
   }
+
+  $doc->strict_error_checking (1);
 } # parse_char_string
 
 1;
