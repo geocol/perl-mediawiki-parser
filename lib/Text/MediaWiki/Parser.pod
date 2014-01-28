@@ -33,4 +33,7 @@ Help:Magic words <http://www.mediawiki.org/wiki/Help:Magic_words>.
 
 Help:Templates <http://www.mediawiki.org/wiki/Help:Templates>.
 
+Extension:SyntaxHighlighter
+<http://www.mediawiki.org/wiki/Extension:SyntaxHighlighter>.
+
 =cut

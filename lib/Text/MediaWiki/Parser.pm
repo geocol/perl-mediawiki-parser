@@ -21,7 +21,7 @@ my $CanContainPhrasing = {
   %$HTMLPhrasing,
   p => 1, b => 1, i => 1, a => 1, pre => 1,
   li => 1, dt => 1, dd => 1, td => 1, th => 1,
-  ref => 1, gallery => 1, nowiki => 1, references => 1,
+  ref => 1, gallery => 1, nowiki => 1, references => 1, source => 1,
   include => 1, iparam => 1, placeholder => 1,
   l => 1, wref => 1, xl => 1, href => 1, comment => 1,
   ul => 1, ol => 1, dl => 1, caption => 1,
@@ -166,7 +166,7 @@ sub parse_char_string ($$$) {
           $insert_p->();
           $open[-1]->manakai_append_text ($1);
         }
-      } elsif ($data =~ s{^(</($HTMLFlowPattern|references)\s*>)}{}o) {
+      } elsif ($data =~ s{^(</($HTMLFlowPattern|references|source)\s*>)}{}o) {
         if ($open[-1]->local_name eq $2) {
           pop @open;
         } elsif ($open[-1]->local_name eq 'p' and
@@ -177,7 +177,7 @@ sub parse_char_string ($$$) {
           $insert_p->();
           $open[-1]->manakai_append_text ($1);
         }
-      } elsif ($data =~ s/^<(gallery|references)\b((?>[^>"']|"[^"]*"|'[^']*')*)>//o) {
+      } elsif ($data =~ s/^<(gallery|references|source)\b((?>[^>"']|"[^"]*"|'[^']*')*)>//o) {
         pop @open while not {body => 1, section => 1, includeonly => 1, noinclude => 1, table => 1, caption => 1, td => 1, th => 1, li => 1, dt => 1, dd => 1, %$HTMLFlow, p => 0}->{$open[-1]->local_name};
         my $el = $doc->create_element_ns (MWNS, 'mw:'.$1);
         my $attrs = $2;
