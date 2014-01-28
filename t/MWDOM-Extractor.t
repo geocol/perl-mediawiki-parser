@@ -60,6 +60,14 @@ def
 aaa bbbb} => q{hogehoge fuga
 abc
 def}],
+  [q{hogehoge fuga{{hoge|AAA}}<ref>abc
+def</ref>
+abc
+def
+
+aaa bbbb} => q{hogehoge fugaAAA
+abc
+def}],
 ) {
   test {
     my $c = shift;

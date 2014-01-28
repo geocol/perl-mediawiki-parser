@@ -137,7 +137,7 @@ sub parse_char_string ($$$) {
         my $el = $doc->create_element_ns (MWNS, 'mw:xl');
         $open[-1]->append_child ($el);
         push @open, $el;
-      } elsif ($data =~ s{^(https?://[A-Za-z0-9_:;.,()/?#\$&+*~=-]+)}{}) {
+      } elsif ($data =~ s{^(https?://[A-Za-z0-9_:;.,()/?%#\$&+*~=-]+)}{}) {
         if ($open[-1]->local_name eq 'xl') {
           $open[-1]->manakai_append_text ($1);
         } else {

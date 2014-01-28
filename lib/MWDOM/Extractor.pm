@@ -35,6 +35,8 @@ sub abstract_text ($) {
           unless ($_->has_attribute_ns (undef, 'embed')) {
             push @$result, $_->text_content;
           }
+        } elsif ($ln eq 'ref') {
+          #
         } elsif ($ln eq 'comment') {
           #
         } else {

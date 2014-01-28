@@ -137,7 +137,7 @@ ab http://hoge/?fuga#abc  as
 |       "  as"
 
 #data
-ab http://hoge/?fuga#abc
+ab http://hoge/?fuga#abc%
 as
 #document
 | <html>
@@ -149,7 +149,7 @@ as
 |       "ab "
 |       <mw xl>
 |         bare=""
-|         "http://hoge/?fuga#abc"
+|         "http://hoge/?fuga#abc%"
 |       "
 | as"
 
