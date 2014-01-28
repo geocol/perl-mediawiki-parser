@@ -1,6 +1,24 @@
 MediaWiki source text parser
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+* Modules
+
+AnyEvent::MediaWiki::Source - Retrieve MediaWiki source text from Web
+Text::MediaWiki::Parser - Parse MediaWiki source text and construct DOM
+MWDOM::Extractor - Extract data from DOM generated from MediaWiki source
+
+* Web server
+
+bin/wpserver.psgi - MediaWiki source extractor Web API
+
+Usage:
+
+  $ make deps
+  $ ./plackup -s Twiggy::Prefork bin/server.psgi
+  $ curl http://localhost:5000/en/text?name=Wikipeida
+  $ curl http://localhost:5000/fr/xml?name=Wiki
+  $ curl http://localhost:5000/ja/abstract?name=Wikipeida
+
 * Author
 
 Wakaba <wakaba@suikawiki.org>.
