@@ -2,7 +2,7 @@
 aa&&a''aaa''af'w
 #document
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
@@ -16,7 +16,7 @@ aa&&a''aaa''af'w
 aa&&a'''aaa'''af'w
 #document
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
@@ -30,7 +30,7 @@ aa&&a'''aaa'''af'w
 aa&&a''a''x''a''af'w
 #document
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
@@ -47,7 +47,7 @@ aa&&a''a''x''a''af'w
 aa&&a''a'''x'''a''af'w
 #document
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
@@ -65,7 +65,7 @@ aa&&a''a'''x'''a''af'w
 aa&&a'''''x'''a''af'w
 #document
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
@@ -82,7 +82,7 @@ aa&&a'''''x'''a''af'w
 aa'''''aa'''''bb
 #document
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>

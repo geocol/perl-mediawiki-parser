@@ -2,7 +2,7 @@
 [[Category:abc]] bb
 #document escaped
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
@@ -15,7 +15,7 @@
 [[Category:abc|abc| def]] bb
 #document escaped
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
@@ -29,7 +29,7 @@
 x[[Category:abc|abc| def]] bb
 #document escaped
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>

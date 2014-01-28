@@ -2,7 +2,7 @@ package Text::MediaWiki::Parser;
 use strict;
 use warnings;
 
-sub MWNS () { 'http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki' }
+sub MWNS () { 'http://suikawiki.org/n/mw' }
 
 my $HTMLPhrasing = {
   s => 1, strike => 1, ins => 1, u => 1, del => 1, code => 1, tt => 1,

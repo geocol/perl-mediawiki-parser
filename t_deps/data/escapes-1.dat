@@ -2,7 +2,7 @@
 ww<nowiki>ab[[aa]]d<s>d</s></nowiki>aa
 #document
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
@@ -16,7 +16,7 @@ ww<nowiki>ab[[aa]]d<s>d</s></nowiki>aa
 ww<nowiki/></nowiki>aa
 #document
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
@@ -31,7 +31,7 @@ aaa<nowiki>aa
 [[cc]]</nowiki>[[aa]]
 #document
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
@@ -50,7 +50,7 @@ aaa<nowiki>aa
 </nowiki>
 #document
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
@@ -68,7 +68,7 @@ aaa<nowiki>aa
 </nowiki>
 #document
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
@@ -85,7 +85,7 @@ aaa<nowiki>aa
 <<nowiki/>span>
 #document
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>
@@ -98,7 +98,7 @@ aaa<nowiki>aa
 &<nowiki/>amp;
 #document
 | <html>
-|   xmlns mw="http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki"
+|   xmlns mw="http://suikawiki.org/n/mw"
 |   xmlns xmlns="http://www.w3.org/1999/xhtml"
 |   <head>
 |   <body>

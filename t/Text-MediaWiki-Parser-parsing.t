@@ -9,7 +9,7 @@ use Text::MediaWiki::Parser;
 use Web::DOM::Document;
 use Web::HTML::Dumper qw(dumptree);
 
-$Web::HTML::Dumper::NamespaceMapping->{q<http://suika.suikawiki.org/~wakaba/wiki/sw/n/MediaWiki>} = 'mw';
+$Web::HTML::Dumper::NamespaceMapping->{q<http://suikawiki.org/n/mw>} = 'mw';
 
 for my $file_name (glob file (__FILE__)->dir->parent->file ('t_deps', 'data', '*.dat')) {
   for_each_test $file_name, {data => {is_prefixed => 1},
