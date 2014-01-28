@@ -34,3 +34,6 @@
 [submodule "modules/ooutils"]
 	path = modules/ooutils
 	url = git://github.com/wakaba/perl-ooutils
+[submodule "modules/json-functions-xs"]
+	path = modules/json-functions-xs
+	url = git://github.com/wakaba/perl-json-functions-xs
