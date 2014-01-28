@@ -1,6 +1,13 @@
-- "../../modules/wanage" tests wp datetime
+- "../../modules/charclass" tests build
+- "../../modules/json-functions-xs" tests
+- "../../modules/ooutils" test operationresponse objectcachesmethod calssregistry classdiamondgenerator
+- "../../modules/wanage" tests mp datetime
 - "../../modules/web-url" tests
+- "../../modules/web-css" tests
 - "../../modules/web-encodings" tests
 - "../../modules/web-dom" tests
-- "../../modules/web-markup" tests
-
+- "../../modules/web-markup" tests tests-json
+- "../../modules/web-useragent-functions" cli oauth tests testws wsse
+- "../../modules/web-utils" tests
+- "../../t_deps/modules/test-x1" tests
+- "../../t_deps/modules/testdataparser" tests
