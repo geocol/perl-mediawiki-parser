@@ -96,7 +96,7 @@ sub parse_char_string ($$$) {
           $insert_p->();
           my $el = $doc->create_element_ns (MWNS, 'mw:l');
           $el->set_attribute ('embed' => '')
-              if $data =~ /^(?:File:|Image:|[^:]+:[^|\[\]]+\.(?i:jpe?g|gif|png)(?=[|\]]))/;
+              if $data =~ /^(?:File:|Image:|[^:]+:[^|\[\]]+\.(?i:jpe?g|gif|png|svg)(?=[|\]]))/;
           $open[-1]->append_child ($el);
           push @open, $el;
         }
