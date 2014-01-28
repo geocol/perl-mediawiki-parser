@@ -7,7 +7,7 @@ require utf8;
 use URL::PercentEncode;
 
 our $RootD ||= file (__FILE__)->dir->parent->parent;
-our $DataD ||= $RootD->subdir ('cache')->subdir ('page-by-name');
+our $DataD ||= $RootD->subdir ('local')->subdir ('cache')->subdir ('page-by-name');
 
 sub get_f_from_title ($$) {
   my ($class, $title) = @_;
