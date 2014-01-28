@@ -340,8 +340,8 @@ sub parse_char_string ($$$) {
               $open[-1]->set_attribute (width => $1);
               $open[-1]->set_attribute (height => $2);
               next;
-            } elsif ($data =~ s/^(upright)(?=\||\]\]|\z)//) {
-              $open[-1]->set_attribute (resizing => $1);
+            } elsif ($data =~ s/^(upright)(?:=([^\|\[\]]+)|)(?=\||\]\]|\z)//) {
+              $open[-1]->set_attribute ($1 => defined $2 ? $2 : '');
               next;
             } elsif ($data =~ s/^(left|right|center|none)(?=\||\]\]|\z)//) {
               $open[-1]->set_attribute (align => $1);
@@ -352,6 +352,8 @@ sub parse_char_string ($$$) {
             } elsif ($data =~ s/^(link|alt|page|class|lang|thumb)=([^|\]]*)(?=\||\]\]|\z)//) {
               $open[-1]->set_attribute ($1 => $2);
               $open[-1]->set_attribute (format => 'thumb') if $1 eq 'thumb';
+              next;
+            } elsif ($data =~ s/^(?=\||\]\]|\z)//) {
               next;
             }
           }

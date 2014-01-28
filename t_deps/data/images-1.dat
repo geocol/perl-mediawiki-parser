@@ -126,3 +126,35 @@
 |         width="12"
 |         wref="ファイル:hgohehoge.JPG"
 |         "hogea a"
+
+#data
+[[Fichier:Premier pas 2.png|thumb|upright||Exemple]]
+#document
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw l>
+|         embed=""
+|         format="thumb"
+|         upright=""
+|         wref="Fichier:Premier pas 2.png"
+|         "Exemple"
+
+#data
+[[Fichier:Premier pas 2.png|thumb|upright=2.0||Exemple]]
+#document
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw l>
+|         embed=""
+|         format="thumb"
+|         upright="2.0"
+|         wref="Fichier:Premier pas 2.png"
+|         "Exemple"
