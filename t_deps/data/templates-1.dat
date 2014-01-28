@@ -200,3 +200,34 @@ abc  =|abc
 |         "vvv"
 |     <p>
 |       "x"
+
+#data
+{{Hoge Fuga
+  |abc  =||
+  |z= vvv|ab=
+   dd}}x
+#document escaped
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="Hoge Fuga"
+|       "
+|   "
+|       <mw iparam>
+|         name="abc"
+|       <mw iparam>
+|       <mw iparam>
+|         "
+|   "
+|       <mw iparam>
+|         name="z"
+|         "vvv"
+|       <mw iparam>
+|         name="ab"
+|         "
+|    dd"
+|     <p>
+|       "x"

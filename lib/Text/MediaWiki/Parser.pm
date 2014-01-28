@@ -107,8 +107,8 @@ sub parse_char_string ($$$) {
         $open[-1]->append_child ($el);
         push @open, $el;
       } elsif ($data =~ s/^\]//) {
-        if ($open[-1]->local_name eq 'l' and $data =~ s/^\]//) {
-          if ($data =~ s/^([A-Za-z0-9_-]+)//) {
+        if ($open[-1]->local_name eq 'l' and $data =~ s/^\]//) { # ]]
+          if ($data =~ s/^([A-Za-z]+)//) {
             if ($open[-1]->has_attribute_ns (undef, 'wref') or
                 ($open[-1]->children->length and
                  $open[-1]->children->[0]->local_name eq 'wref')) {
@@ -583,7 +583,8 @@ sub parse_char_string ($$$) {
       $nowiki = qr{</nowiki\s*>};
       $parse_inline->($text);
     } elsif ($line =~ /^ .*$/s and
-             not {ul => 1, ol => 1, dl => 1}->{$open[-1]->local_name}) {
+             not {ul => 1, ol => 1, dl => 1,
+                  include => 1, iparam => 1}->{$open[-1]->local_name}) {
       pop @open while not {body => 1, section => 1, includeonly => 1, noinclude => 1, table => 1, caption => 1,
                            td => 1, th => 1,
                            pre => 1}->{$open[-1]->local_name};

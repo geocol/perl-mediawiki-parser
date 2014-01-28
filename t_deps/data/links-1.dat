@@ -265,3 +265,16 @@ abxs#REDIRECT [[abc]]z
 |       <mw l>
 |         "abc"
 |       "あいうえ"
+
+#data
+[[明治]]3年
+#document escaped
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw l>
+|         "明治"
+|       "3年"
