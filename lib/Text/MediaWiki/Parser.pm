@@ -317,7 +317,7 @@ sub parse_char_string ($$$) {
             push @open, $el
           }
         }
-      } elsif ($data =~ s/^(&[a-z0-9]+;)//) {
+      } elsif ($data =~ s/^(&#?[a-z0-9]+;)//) {
         $insert_p->();
         $html->inner_html ($1);
         $open[-1]->manakai_append_text ($html->text_content);

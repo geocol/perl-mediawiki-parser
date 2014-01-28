@@ -66,3 +66,14 @@ aa&amp;a&euro;&copy;x
 |     <p>
 |       <tt>
 |         class="\u200F\u200F\u200F"
+
+#data
+T&#333;ky&#333;
+#document escaped
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "T\u014Dky\u014D"
