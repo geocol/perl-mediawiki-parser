@@ -4,62 +4,20 @@ use warnings;
 our $VERSION = '2.0';
 use Path::Class;
 require utf8;
-use URL::PercentEncode;
+use Encode;
 
-our $RootD ||= file (__FILE__)->dir->parent->parent;
-our $DataD ||= $RootD->subdir ('local')->subdir ('cache')->subdir ('page-by-name');
+sub new_from_cache_d ($$) {
+  return bless {cache_d => $_[1]}, $_[0];
+} # new_from_cache_d
 
-sub get_f_from_title ($$) {
-  my ($class, $title) = @_;
-  if (utf8::is_utf8 ($title)) {
-    require Encode;
-    $title = Encode::encode ('utf8', $title);
-  }
-  my $file_name = percent_encode_b $title;
-  $file_name =~ s/_/_5F/g;
-  $file_name =~ s/%/_/g;
-  $file_name .= '.dat';
-  return $DataD->file ($file_name);
-} # get_f_from_title
+## ------ Titles ------
 
-sub has_text_in_cache ($$) {
-  my ($class, $title) = @_;
-  my $f = $class->get_f_from_title ($title);
-  return -f $f;
-} # has_text_in_cache
-
-sub save_page_xml ($$$;%) {
-  my ($class, $file => $title_pattern, %args) = @_;
-
-  if (utf8::is_utf8 ($title_pattern . '')) {
-    require Encode;
-    $title_pattern = Encode::encode ('utf8', $title_pattern);
-    $title_pattern = qr/$title_pattern/;
-  }
-  
-  $DataD->mkpath;
-  
-  my $count = 0;
-  local $/ = '</page>';
-  while (<$file>) {
-    if (m[<title>([^<>]+)</title>]) {
-      my $word = $1;
-      if ($word =~ /$title_pattern/) {
-        my $f = $class->get_f_from_title ($word);
-        print STDERR "$word -> $f\n";
-        eval {
-          my $file = $f->openw;
-          print $file $_;
-          1;
-        } or warn $@;
-        return if $args{max} and $args{max} <= ++$count;
-      }
-    }
-  }
-} # save_page_xml
+sub cached_titles_f ($) {
+  return $_[0]->{cached_titles_f} ||= $_[0]->{cache_d}->file ('titles.txt');
+} # cached_titles_f
 
 sub extract_titles_from_file ($$$) {
-  my ($class, $file, $code) = @_;
+  my ($self, $file, $code) = @_;
   local $/ = '</page>';
   my @list;
   require Encode;
@@ -70,14 +28,92 @@ sub extract_titles_from_file ($$$) {
       $text =~ s/&gt;/>/g;
       $text =~ s/&quot;/\x22/g;
       $text =~ s/&amp;/&/g;
-      $code->(Encode::decode ('utf-8', $text));
+      $code->(decode ('utf-8', $text));
     }
   }
 } # extract_titles_from_file
 
-sub get_text_from_cache ($$;%) {
-  my ($class, $title, %args) = @_;
-  my $f = $class->get_f_from_title ($title);
+sub save_titles_from_f ($$) {
+  my ($self, $dump_f) = @_;
+  my $dump_file = $dump_f->openr;
+  my $out_file = $self->cached_titles_f->openw;
+  MediaWikiXML::PageExtractor->extract_titles_from_file ($dump_file => sub {
+    print $out_file encode ('utf8', $_[0]), "\x0A";
+  });
+} # save_titles_from_f
+
+sub save_titles_from_f_if_necessary ($$) {
+  my ($self, $dump_f) = @_;
+  my $out_f = $self->cached_titles_f;
+  return if -f $out_f and $out_f->stat->mtime > $dump_f->stat->mtime;
+  return $self->save_titles_from_f ($dump_f);
+} # save_titles_from_f_if_necessary
+
+sub has_page_in_cached_titles ($$) {
+  my ($self, $title) = @_;
+  my $file = $self->cached_titles_f->openr;
+  my $pattern = (encode 'utf8', $title) . "\x0A";
+  while (<$file>) {
+    if ($_ eq $pattern) {
+      return 1;
+    }
+  }
+  return 0;
+} # has_page_in_cached_titles
+
+## ------ Pages ------
+
+sub cached_pages_d ($) {
+  return $_[0]->{cached_pages_d} ||= $_[0]->{cache_d}->subdir ('page-by-name');
+} # cached_pages_d
+
+sub get_page_xml_f_from_title ($$) {
+  my ($self, $title) = @_;
+  $title = encode ('utf8', $title) if utf8::is_utf8 ($title);
+  $title =~ s{([^0-9A-Za-z])}{sprintf '_%02X', ord $1}ge;
+  $title .= '.dat';
+  return $self->cached_pages_d->file ($title);
+} # get_page_xml_f_from_title
+
+sub save_page_xml_from_f ($$$;%) {
+  my ($self, $f => $title_pattern, %args) = @_;
+  my $file = $f->openr;
+
+  if (utf8::is_utf8 ($title_pattern . '')) {
+    $title_pattern = encode ('utf8', $title_pattern);
+    $title_pattern = qr/$title_pattern/;
+  }
+  
+  $self->cached_pages_d->mkpath;
+  
+  my $count = 0;
+  local $/ = '</page>';
+  while (<$file>) {
+    if (m[<title>([^<>]+)</title>]) {
+      my $word = $1;
+      if ($word =~ /$title_pattern/) {
+        my $f = $self->get_page_xml_f_from_title ($word);
+        #print STDERR "$word -> $f\n";
+        eval {
+          my $file = $f->openw;
+          print $file $_;
+          1;
+        } or warn $@;
+        return if $args{max} and $args{max} <= ++$count;
+      }
+    }
+  }
+} # save_page_xml_from_f
+
+sub has_page_xml_in_cache ($$) {
+  my ($self, $title) = @_;
+  my $f = $self->get_page_xml_f_from_title ($title);
+  return -f $f;
+} # has_page_xml_in_cache
+
+sub get_page_text_from_cache ($$;%) {
+  my ($self, $title, %args) = @_;
+  my $f = $self->get_page_xml_f_from_title ($title);
   if ($args{allow_not_found} and not -f $f) {
     return undef;
   }
@@ -88,12 +124,23 @@ sub get_text_from_cache ($$;%) {
     $text =~ s/&gt;/>/g;
     $text =~ s/&quot;/\x22/g;
     $text =~ s/&amp;/&/g;
-    require Encode;
-    return Encode::decode ('utf-8', $text);
+    return decode ('utf-8', $text);
   } else {
     return undef;
   }
-} # get_text_from_cache
+} # get_page_text_from_cache
+
+sub get_page_text_by_name_from_f_or_cache ($$$) {
+  my ($self, $dump_f, $name) = @_;
+  my $pattern = qr{\A\Q$name\E\z};
+  my $cache_f = $self->get_page_xml_f_from_title ($name);
+  if (-f $cache_f and $cache_f->stat->mtime > $dump_f->stat->mtime) {
+    #
+  } else {
+    $self->save_page_xml_from_f ($dump_f, $pattern, max => 1);
+  }
+  return $self->get_page_text_from_cache ($name); # or undef
+} # get_page_text_by_name_from_f_or_cache
 
 1;
 
