@@ -78,7 +78,12 @@ sub _get_source_text_by_name_as_cv_from_dump ($$) {
     return undef unless $mx->has_page_in_cached_titles ($name);
     return $mx->get_page_text_by_name_from_f_or_cache ($dump_f, $name); # or undef
   } sub {
-    $cv->send ($_[0]);
+    if ($@) {
+      warn $@;
+      $cv->send (undef);
+    } else {
+      $cv->send ($_[0]);
+    }
   };
 
   return $cv;
