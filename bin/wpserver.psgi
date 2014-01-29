@@ -20,7 +20,7 @@ if (defined $ENV{WPSERVER_KEY_MAPPING}) {
     for (keys %$json) {
       if (ref $json->{$_} eq 'HASH') {
         $KeyMapping->{$_} = {cache_d => dir ($json->{$_}->{cache_dir_name})->absolute ($base_d),
-                             dump_f => dir ($json->{$_}->{dump_file_name})->absolute ($base_d)};
+                             dump_f => file ($json->{$_}->{dump_file_name})->absolute ($base_d)};
       }
     }
   }
