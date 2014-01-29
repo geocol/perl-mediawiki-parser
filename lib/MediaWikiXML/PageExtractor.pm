@@ -1,7 +1,7 @@
 package MediaWikiXML::PageExtractor;
 use strict;
 use warnings;
-our $VERSION = '1.0';
+our $VERSION = '2.0';
 use Path::Class;
 require utf8;
 use URL::PercentEncode;
@@ -22,16 +22,24 @@ sub get_f_from_title ($$) {
   return $DataD->file ($file_name);
 } # get_f_from_title
 
-sub save_page_xml ($$$) {
-  my ($class, $file => $title_pattern) = @_;
+sub has_text_in_cache ($$) {
+  my ($class, $title) = @_;
+  my $f = $class->get_f_from_title ($title);
+  return -f $f;
+} # has_text_in_cache
+
+sub save_page_xml ($$$;%) {
+  my ($class, $file => $title_pattern, %args) = @_;
 
   if (utf8::is_utf8 ($title_pattern . '')) {
     require Encode;
     $title_pattern = Encode::encode ('utf8', $title_pattern);
+    $title_pattern = qr/$title_pattern/;
   }
   
   $DataD->mkpath;
   
+  my $count = 0;
   local $/ = '</page>';
   while (<$file>) {
     if (m[<title>([^<>]+)</title>]) {
@@ -44,10 +52,28 @@ sub save_page_xml ($$$) {
           print $file $_;
           1;
         } or warn $@;
+        return if $args{max} and $args{max} <= ++$count;
       }
     }
   }
 } # save_page_xml
+
+sub extract_titles_from_file ($$$) {
+  my ($class, $file, $code) = @_;
+  local $/ = '</page>';
+  my @list;
+  require Encode;
+  while (<$file>) {
+    if (m[<title>([^<>]+)</title>]) {
+      my $text = $1;
+      $text =~ s/&lt;/</g;
+      $text =~ s/&gt;/>/g;
+      $text =~ s/&quot;/\x22/g;
+      $text =~ s/&amp;/&/g;
+      $code->(Encode::decode ('utf-8', $text));
+    }
+  }
+} # extract_titles_from_file
 
 sub get_text_from_cache ($$;%) {
   my ($class, $title, %args) = @_;
@@ -71,11 +97,11 @@ sub get_text_from_cache ($$;%) {
 
 1;
 
-__END__
-
 =head1 LICENSE
 
-Copyright 2010 Wakaba <w@suika.fam.cx>.
+Copyright 2010 Wakaba <wakaba@suikawiki.org>.
+
+Copyright 2014 Hatena <http://hatenacorp.jp/>.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

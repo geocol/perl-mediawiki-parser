@@ -32,25 +32,21 @@ Wikipedia (Japanese) - Database Download
 =head1 AVAILABILITY
 
 Latest version of this Perl modules is available in the git repository
-<http://suika.fam.cx/gate/git/wi/web/wikipediadb.git/>.
+<https://github.com/geocol/perl-mediawiki-parser>.
 
 =head1 HISTORY
 
-=over 4
-
-=item Version 1.0 (2010-09-12)
-
-First version.
-
-=back
+First version was released on 2010-09-12.
 
 =head1 AUTHOR
 
-Wakaba <w@suika.fam.cx>.
+Wakaba <wakaba@suikawiki.org>.
 
 =head1 LICENSE
 
-Copyright 2010 Wakaba <w@suika.fam.cx>.
+Copyright 2010 Wakaba <wakaba@suikawiki.org>.
+
+Copyright 2014 Hatena <http://hatenacorp.jp/>.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
