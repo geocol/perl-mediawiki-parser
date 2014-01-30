@@ -48,6 +48,7 @@ sub _name ($) {
   $s =~ s/\s+/_/;
   $s =~ s/^([a-z])/uc $1/ge;
   $s =~ s/(_[a-z])/uc $1/ge;
+  $s =~ tr/_/ /;
   return $s;
 } # _name
 
