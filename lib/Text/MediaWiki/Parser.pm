@@ -6,7 +6,7 @@ sub MWNS () { 'http://suikawiki.org/n/mw' }
 
 my $HTMLPhrasing = {
   s => 1, strike => 1, ins => 1, u => 1, del => 1, code => 1, tt => 1,
-  span => 1, font => 1, sub => 1, sup => 1,
+  span => 1, font => 1, sub => 1, sup => 1, small => 1,
 };
 
 my $HTMLFlow = {
