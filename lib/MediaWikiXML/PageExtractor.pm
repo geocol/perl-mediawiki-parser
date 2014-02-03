@@ -1,10 +1,11 @@
 package MediaWikiXML::PageExtractor;
 use strict;
 use warnings;
-our $VERSION = '2.0';
+our $VERSION = '3.0';
 use Path::Class;
 require utf8;
 use Encode;
+use Web::DomainName::Punycode qw(encode_punycode);
 
 sub new_from_cache_d ($$) {
   return bless {cache_d => $_[1]}, $_[0];
@@ -64,12 +65,13 @@ sub has_page_in_cached_titles ($$) {
 ## ------ Pages ------
 
 sub cached_pages_d ($) {
-  return $_[0]->{cached_pages_d} ||= $_[0]->{cache_d}->subdir ('page-by-name');
+  return $_[0]->{cached_pages_d} ||= $_[0]->{cache_d}->subdir ('pages');
 } # cached_pages_d
 
 sub get_page_xml_f_from_title ($$) {
   my ($self, $title) = @_;
-  $title = encode ('utf8', $title) if utf8::is_utf8 ($title);
+  $title = decode ('utf-8', $title) unless utf8::is_utf8 ($title);
+  $title = encode_punycode $title;
   $title =~ s{([^0-9A-Za-z])}{sprintf '_%02X', ord $1}ge;
   $title .= '.dat';
   return $self->cached_pages_d->file ($title);
