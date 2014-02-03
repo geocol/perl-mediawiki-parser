@@ -278,3 +278,20 @@ abxs#REDIRECT [[abc]]z
 |       <mw l>
 |         "明治"
 |       "3年"
+
+#data
+[[明治]][[File:hoge.svg|23px]]3年
+#document escaped
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw l>
+|         "明治"
+|       <mw l>
+|         embed=""
+|         width="23"
+|         "File:hoge.svg"
+|       "3年"
