@@ -257,6 +257,7 @@ sub parse_char_string ($$$) {
           if ($wref =~ s/^(?:(subst|safesubst|msgnw):)//) {
             $el->set_attribute (command => $1);
           }
+          $wref =~ s/\s+\z//;
           $el->set_attribute (wref => $wref);
           $open[-1]->append_child ($el);
           push @open, $el;

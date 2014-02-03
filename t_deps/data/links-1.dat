@@ -157,7 +157,7 @@ aa[[{{a bc }}|de {{aa}}'''a''']] bb
 |       <mw l>
 |         <mw wref>
 |           <mw include>
-|             wref="a bc "
+|             wref="a bc"
 |         "de "
 |         <mw include>
 |           wref="aa"
@@ -178,7 +178,7 @@ aa[[{{a bc }}|de {{aa}}'''a''']]x bb
 |       <mw l>
 |         <mw wref>
 |           <mw include>
-|             wref="a bc "
+|             wref="a bc"
 |         "de "
 |         <mw include>
 |           wref="aa"

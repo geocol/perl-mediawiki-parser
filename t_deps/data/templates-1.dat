@@ -156,6 +156,24 @@ abc{{subst::Hoge}}
 |       "x"
 
 #data
+{{Hoge Fuga   |abc|aaa  = bbr }}x
+#document escaped
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="Hoge Fuga"
+|       <mw iparam>
+|         "abc"
+|       <mw iparam>
+|         name="aaa"
+|         "bbr "
+|     <p>
+|       "x"
+
+#data
 {{Hoge Fuga|
 abc  =|abc
 = vvv}}x
