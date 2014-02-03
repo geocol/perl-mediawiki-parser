@@ -10,10 +10,10 @@ use Test::X1;
 my $cache_d = file (__FILE__)->dir->subdir ('cache-yummy');
 
 for my $test (
-  ['abc', 'page-by-name/abc.dat'],
-  ["\x{5000}\x{5001}\x{5002}abc", 'page-by-name/_E5_80_80_E5_80_81_E5_80_82abc.dat'],
-  ['a+*&<>*a"//bb=-~\\_', 'page-by-name/a_2B_2A_26_3C_3E_2Aa_22_2F_2Fbb_3D_2D_7E_5C_5F.dat'],
-  ["\xE5\x80\x80\xE5\x80\x81abc", 'page-by-name/_E5_80_80_E5_80_81abc.dat'],
+  ['abc', 'pages/abc_2D.dat'],
+  ["\x{5000}\x{5001}\x{5002}abc", 'pages/abc_2D7p0efg.dat'],
+  ['a+*&<>*a"//bb=-~\\_', 'pages/a_2B_2A_26_3C_3E_2Aa_22_2F_2Fbb_3D_2D_7E_5C_5F_2D.dat'],
+  ["\xE5\x80\x80\xE5\x80\x81abc", 'pages/abc_2D7p0ef.dat'],
 ) {
   test {
     my $c = shift;
