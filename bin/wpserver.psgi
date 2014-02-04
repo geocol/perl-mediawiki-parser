@@ -59,6 +59,8 @@ sub _wp ($) {
     return AnyEvent::MediaWiki::Source->new_from_dump_f_and_cache_d
         ($KeyMapping->{$wiki_key}->{dump_f},
          $KeyMapping->{$wiki_key}->{cache_d});
+  } elsif ($wiki_key =~ /\A(.+)-wiktionary\z/) {
+    return AnyEvent::MediaWiki::Source->new_wiktionary_by_lang ($1);
   } else {
     return AnyEvent::MediaWiki::Source->new_wikipedia_by_lang ($wiki_key);
   }
@@ -73,7 +75,7 @@ return sub {
       my $path = $app->path_segments;
 
       if (length $path->[0] and
-          defined $path->[1] and $path->[1] =~ /\A(?:text|xml|abstract)\z/ and
+          defined $path->[1] and $path->[1] =~ /\A(?:text|xml|abstract|defs)\z/ and
           not defined $path->[2]) {
         # /{wikikey}/{format}?name={page}
         my $name = _name $app->text_param ('name') // '';
@@ -94,6 +96,15 @@ return sub {
                 $app->send_redirect (_url [$path->[0], $path->[1]], $r->name);
               } else {
                 $app->send_plain_text ($x->abstract_text // '');
+              }
+            } elsif ($path->[1] eq 'defs') {
+              my $doc = _parse $name, $text;
+              my $x = MWDOM::Extractor->new_from_document ($doc);
+              my $r = $x->redirect_wref;
+              if (defined $r) {
+                $app->send_redirect (_url [$path->[0], $path->[1]], $r->name);
+              } else {
+                $app->send_plain_text (join "\x0A", @{$x->dict_defs});
               }
             } else {
               $app->send_plain_text ($text);
