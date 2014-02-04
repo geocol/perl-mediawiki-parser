@@ -1,6 +1,7 @@
 package MWDOM::Extractor;
 use strict;
 use warnings;
+use utf8;
 use MWDOM::WRef;
 use Char::Normalize::FullwidthHalfwidth qw(get_fwhw_normalized);
 
@@ -72,7 +73,12 @@ sub dict_defs ($) {
           if ($ln eq 'ref' or $ln eq 'comment') {
             #
           } elsif ($ln eq 'include') {
-            #
+            if ($node->get_attribute ('wref') eq 'ふりがな') {
+              my @ip = grep { $_->local_name eq 'iparam' } @{$node->children};
+              push @$text, $ip[0] ? $ip[0]->text_content : '';
+            } else {
+              #
+            }
           } else {
             push @$text, $node->text_content;
           }
