@@ -2,6 +2,7 @@ package MWDOM::Extractor;
 use strict;
 use warnings;
 use MWDOM::WRef;
+use Char::Normalize::FullwidthHalfwidth qw(get_fwhw_normalized);
 
 sub MWNS () { q<http://suikawiki.org/n/mw> }
 sub HTMLNS () { q<http://www.w3.org/1999/xhtml> }
@@ -50,7 +51,7 @@ sub abstract_text ($) {
       push @$result, $_->data;
     }
   }
-  $self->{abstract_text} = join '', @$result;
+  $self->{abstract_text} = get_fwhw_normalized join '', @$result;
   $self->{abstract_text} =~ s/\A\s+//;
   $self->{abstract_text} =~ s/\s+\z//;
   $self->{abstract_text} =~ s/\s+/ /;
@@ -89,7 +90,7 @@ sub dict_defs ($) {
         push @$text, $node->data;
       }
     }
-    $text = join '', @$text;
+    $text = get_fwhw_normalized join '', @$text;
     $text =~ s/\A\s+//;
     $text =~ s/\s+\z//;
     $text =~ s/\s+/ /;
