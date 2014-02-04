@@ -157,7 +157,7 @@ aa[[{{a bc }}|de {{aa}}'''a''']] bb
 |       <mw l>
 |         <mw wref>
 |           <mw include>
-|             wref="a bc "
+|             wref="a bc"
 |         "de "
 |         <mw include>
 |           wref="aa"
@@ -178,7 +178,7 @@ aa[[{{a bc }}|de {{aa}}'''a''']]x bb
 |       <mw l>
 |         <mw wref>
 |           <mw include>
-|             wref="a bc "
+|             wref="a bc"
 |         "de "
 |         <mw include>
 |           wref="aa"
@@ -277,4 +277,21 @@ abxs#REDIRECT [[abc]]z
 |     <p>
 |       <mw l>
 |         "明治"
+|       "3年"
+
+#data
+[[明治]][[File:hoge.svg|23px]]3年
+#document escaped
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       <mw l>
+|         "明治"
+|       <mw l>
+|         embed=""
+|         width="23"
+|         "File:hoge.svg"
 |       "3年"

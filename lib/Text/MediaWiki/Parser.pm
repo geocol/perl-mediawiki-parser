@@ -6,7 +6,7 @@ sub MWNS () { 'http://suikawiki.org/n/mw' }
 
 my $HTMLPhrasing = {
   s => 1, strike => 1, ins => 1, u => 1, del => 1, code => 1, tt => 1,
-  span => 1, font => 1, sub => 1, sup => 1,
+  span => 1, font => 1, sub => 1, sup => 1, small => 1,
 };
 
 my $HTMLFlow = {
@@ -96,7 +96,7 @@ sub parse_char_string ($$$) {
           $insert_p->();
           my $el = $doc->create_element_ns (MWNS, 'mw:l');
           $el->set_attribute ('embed' => '')
-              if $data =~ /^(?:File:|Image:|[^:]+:[^|\[\]]+\.(?i:jpe?g|gif|png|svg)(?=[|\]]))/;
+              if $data =~ /^(?:File:|Image:|[^:|\[\]]+:[^|\[\]]+\.(?i:jpe?g|gif|png|svg)(?=[|\]]))/;
           $open[-1]->append_child ($el);
           push @open, $el;
         }
@@ -257,6 +257,7 @@ sub parse_char_string ($$$) {
           if ($wref =~ s/^(?:(subst|safesubst|msgnw):)//) {
             $el->set_attribute (command => $1);
           }
+          $wref =~ s/\s+\z//;
           $el->set_attribute (wref => $wref);
           $open[-1]->append_child ($el);
           push @open, $el;

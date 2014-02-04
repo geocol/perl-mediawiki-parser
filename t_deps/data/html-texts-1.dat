@@ -27,6 +27,20 @@ aag<strike>aeg</s>?</strike>afwa
 |       "afwa"
 
 #data
+aag<small>aeg</s>?</small>afwa
+#document
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <p>
+|       "aag"
+|       <small>
+|         "aeg</s>?"
+|       "afwa"
+
+#data
 aa<br>aaa
 aa<br/>xx
 #document
