@@ -9,6 +9,8 @@ MediaWikiXML::PageExtractor - Extract page data from MediaWiki-dumped XML file
   ## Extract pages whose title matches to "HTML" and "XML" from STDIN
   ## (latest-pages-meta-current.xml) and save into the |cache/page-by-name|
   ## directory.
+  ##
+  ## !!!PATTERN ARE EVALUATED AS BYTES!!!  Don't use [...].
   MediaWikiXML::PageExtractor->save_page_xml (\*STDIN, qr/HTML|XML/);
   
   ## Print the content of "HTML" wiki page using the saved data
