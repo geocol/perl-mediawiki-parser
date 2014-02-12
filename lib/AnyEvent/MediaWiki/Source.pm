@@ -78,8 +78,6 @@ sub _get_source_text_by_name_as_cv_from_dump ($$) {
     require MediaWikiXML::PageExtractor;
     my $mx = MediaWikiXML::PageExtractor->new_from_cache_d ($cache_d);
     $mx->save_titles_from_f_if_necessary ($dump_f);
-
-    return undef unless $mx->has_page_in_cached_titles ($name);
     return $mx->get_page_text_by_name_from_f_or_cache ($dump_f, $name); # or undef
   } sub {
     if ($@) {

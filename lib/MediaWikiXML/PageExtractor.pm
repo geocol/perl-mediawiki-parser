@@ -1,11 +1,14 @@
 package MediaWikiXML::PageExtractor;
 use strict;
 use warnings;
-our $VERSION = '3.0';
+our $VERSION = '4.0';
 use Path::Class;
 require utf8;
 use Encode;
+use Time::Local qw(timegm_nocheck);
 use Web::DomainName::Punycode qw(encode_punycode);
+
+our $DEBUG = $ENV{MW_DEBUG};
 
 sub new_from_cache_d ($$) {
   return bless {cache_d => $_[1]}, $_[0];
@@ -14,8 +17,16 @@ sub new_from_cache_d ($$) {
 ## ------ Titles ------
 
 sub cached_titles_f ($) {
-  return $_[0]->{cached_titles_f} ||= $_[0]->{cache_d}->file ('titles.txt');
+  return $_[0]->{cached_titles_f} ||= $_[0]->{cache_d}->file ('mt-and-titles.txt');
 } # cached_titles_f
+
+sub _parse_timestamp ($) {
+  my $s = $_[0];
+  if ($s =~ m{([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})Z}) {
+    return timegm_nocheck $6, $5, $4, $3, $2-1, $1-1900;
+  }
+  return undef;
+} # _parse_timestamp
 
 sub extract_titles_from_file ($$$) {
   my ($self, $file, $code) = @_;
@@ -29,7 +40,11 @@ sub extract_titles_from_file ($$$) {
       $text =~ s/&gt;/>/g;
       $text =~ s/&quot;/\x22/g;
       $text =~ s/&amp;/&/g;
-      $code->(decode ('utf-8', $text));
+
+      m{<timestamp>([^<>]+)</timestamp>};
+      my $ts = _parse_timestamp $1;
+
+      $code->(decode ('utf-8', $text), $ts || 0);
     }
   }
 } # extract_titles_from_file
@@ -39,7 +54,7 @@ sub save_titles_from_f ($$) {
   my $dump_file = $dump_f->openr;
   my $out_file = $self->cached_titles_f->openw;
   MediaWikiXML::PageExtractor->extract_titles_from_file ($dump_file => sub {
-    print $out_file encode ('utf8', $_[0]), "\x0A";
+    print $out_file $_[1], "\t", encode ('utf8', $_[0]), "\x0A";
   });
 } # save_titles_from_f
 
@@ -55,11 +70,11 @@ sub has_page_in_cached_titles ($$) {
   my $file = $self->cached_titles_f->openr;
   my $pattern = (encode 'utf8', $title) . "\x0A";
   while (<$file>) {
-    if ($_ eq $pattern) {
-      return 1;
+    if (/\A([0-9]+)\t\Q$pattern\E\z/) {
+      return $1;
     }
   }
-  return 0;
+  return undef;
 } # has_page_in_cached_titles
 
 ## ------ Pages ------
@@ -94,11 +109,16 @@ sub save_page_xml_from_f ($$$;%) {
     if (m[<title>([^<>]+)</title>]) {
       my $word = $1;
       if ($word =~ /$title_pattern/) {
+        m{<timestamp>([^<>]+)</timestamp>};
+        my $ts = _parse_timestamp $1;
+
         my $f = $self->get_page_xml_f_from_title ($word);
-        #print STDERR "$word -> $f\n";
+        print STDERR "$word -> $f\n" if $DEBUG;
         eval {
           my $file = $f->openw;
           print $file $_;
+          close $file;
+          utime $ts, $ts, $f->stringify;
           1;
         } or warn $@;
         return if $args{max} and $args{max} <= ++$count;
@@ -136,10 +156,13 @@ sub get_page_text_by_name_from_f_or_cache ($$$) {
   my ($self, $dump_f, $name) = @_;
   my $pattern = qr{\A\Q$name\E\z};
   my $cache_f = $self->get_page_xml_f_from_title ($name);
-  if (-f $cache_f and $cache_f->stat->mtime > $dump_f->stat->mtime) {
-    #
-  } else {
-    $self->save_page_xml_from_f ($dump_f, $pattern, max => 1);
+  if (-f $cache_f) {
+    my $ts = $self->has_page_in_cached_titles ($name);
+    if (not defined $ts) {
+      return undef;
+    } elsif (not $ts or $dump_f->stat->mtime < $ts) {
+      $self->save_page_xml_from_f ($dump_f, $pattern, max => 1);
+    }
   }
   return $self->get_page_text_from_cache ($name); # or undef
 } # get_page_text_by_name_from_f_or_cache
