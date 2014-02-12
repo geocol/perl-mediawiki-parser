@@ -16,9 +16,9 @@ sub new_from_cache_d ($$) {
 
 ## ------ Titles ------
 
-sub cached_titles_f ($) {
-  return $_[0]->{cached_titles_f} ||= $_[0]->{cache_d}->file ('mt-and-titles.txt');
-} # cached_titles_f
+sub cached_titles_d ($) {
+  return $_[0]->{cached_titles_d} ||= $_[0]->{cache_d}->subdir ('mt-and-titles');
+} # cached_titles_d
 
 sub _parse_timestamp ($) {
   my $s = $_[0];
@@ -51,27 +51,35 @@ sub extract_titles_from_file ($$$) {
 
 sub save_titles_from_f ($$) {
   my ($self, $dump_f) = @_;
+  warn "Updating index...\n" if $DEBUG;
   my $dump_file = $dump_f->openr;
-  my $out_file = $self->cached_titles_f->openw;
+  my $out_d = $self->cached_titles_d;
+  $out_d->mkpath;
+  $out_d->file ('touch')->openw;
+  my $out_files = {};
+  $out_files->{pack 'C', $_} = $out_d->file (sprintf 'index-%02X.txt', $_)->openw for 0x00..0xFF;
   MediaWikiXML::PageExtractor->extract_titles_from_file ($dump_file => sub {
-    print $out_file $_[1], "\t", encode ('utf8', $_[0]), "\x0A";
+    my $p = encode ('utf8', $_[0]);
+    print { $out_files->{substr $p, 0, 1} } $_[1], "\t", $p, "\x0A";
   });
+  warn "Index updated\n" if $DEBUG;
 } # save_titles_from_f
 
 sub save_titles_from_f_if_necessary ($$) {
   my ($self, $dump_f) = @_;
-  my $out_f = $self->cached_titles_f;
+  my $out_f = $self->cached_titles_d->file ('touch');
   return if -f $out_f and $out_f->stat->mtime > $dump_f->stat->mtime;
   return $self->save_titles_from_f ($dump_f);
 } # save_titles_from_f_if_necessary
 
 sub has_page_in_cached_titles ($$) {
   my ($self, $title) = @_;
-  my $file = $self->cached_titles_f->openr;
-  my $pattern = (encode 'utf8', $title) . "\x0A";
+  my $p = encode 'utf8', $title;
+  my $file = $self->cached_titles_d->file (sprintf 'index-%02X.txt', ord substr $p, 0, 1)->openr;
   while (<$file>) {
-    if (/\A([0-9]+)\t\Q$pattern\E\z/) {
-      return $1;
+    my $index = index ($_, "\t$p\x0A");
+    if ($index > -1) {
+      return 0 + substr $_, 0, $index;
     }
   }
   return undef;
@@ -155,15 +163,15 @@ sub get_page_text_from_cache ($$;%) {
 sub get_page_text_by_name_from_f_or_cache ($$$) {
   my ($self, $dump_f, $name) = @_;
   my $pattern = qr{\A\Q$name\E\z};
+
+  my $ts = $self->has_page_in_cached_titles ($name);
+  return undef unless defined $ts;
+
   my $cache_f = $self->get_page_xml_f_from_title ($name);
-  if (-f $cache_f) {
-    my $ts = $self->has_page_in_cached_titles ($name);
-    if (not defined $ts) {
-      return undef;
-    } elsif (not $ts or $dump_f->stat->mtime < $ts) {
-      $self->save_page_xml_from_f ($dump_f, $pattern, max => 1);
-    }
+  if (not -f $cache_f or $cache_f->stat->mtime < $ts) {
+    $self->save_page_xml_from_f ($dump_f, $pattern, max => 1);
   }
+
   return $self->get_page_text_from_cache ($name); # or undef
 } # get_page_text_by_name_from_f_or_cache
 
