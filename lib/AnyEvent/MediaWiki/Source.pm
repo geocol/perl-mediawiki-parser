@@ -27,17 +27,17 @@ sub top_url ($;$) {
   return $_[0]->{top_url};
 } # top_url
 
-sub get_source_text_by_name_as_cv ($$) {
-  my ($self, $name) = @_;
+sub get_source_text_by_name_as_cv ($$;%) {
+  my ($self, $name, %args) = @_;
   if (defined $_[0]->{cache_d}) {
-    $self->_get_source_text_by_name_as_cv_from_dump ($name);
+    $self->_get_source_text_by_name_as_cv_from_dump ($name, %args);
   } else {
-    $self->_get_source_text_by_name_as_cv_by_http ($name);
+    $self->_get_source_text_by_name_as_cv_by_http ($name, %args);
   }
 } # get_source_text_by_name_as_cv
 
-sub _get_source_text_by_name_as_cv_by_http ($$) {
-  my ($self, $name) = @_;
+sub _get_source_text_by_name_as_cv_by_http ($$;%) {
+  my ($self, $name, %args) = @_;
   my $url = $self->top_url;
   $url .= '/' unless $url =~ m{/\z};
   $url .= q<w/index.php?title=>.(percent_encode_c $name).q<&action=edit>,
@@ -68,8 +68,8 @@ sub _get_source_text_by_name_as_cv_by_http ($$) {
   return $cv;
 } # _get_source_text_by_name_as_cv_by_http
 
-sub _get_source_text_by_name_as_cv_from_dump ($$) {
-  my ($self, $name) = @_;
+sub _get_source_text_by_name_as_cv_from_dump ($$;%) {
+  my ($self, $name, %args) = @_;
   my $cv = AE::cv;
   my $dump_f = $self->{dump_f};
   my $cache_d = $self->{cache_d};
@@ -78,7 +78,17 @@ sub _get_source_text_by_name_as_cv_from_dump ($$) {
     require MediaWikiXML::PageExtractor;
     my $mx = MediaWikiXML::PageExtractor->new_from_cache_d ($cache_d);
     $mx->save_titles_from_f_if_necessary ($dump_f);
-    return $mx->get_page_text_by_name_from_f_or_cache ($dump_f, $name); # or undef
+    if (defined $args{ims}) {
+      my $ts = $mx->has_page_in_cached_titles ($name);
+      if (defined $ts and $ts <= $args{ims}) {
+        return {not_modified => 1};
+      } else {
+        return {timestamp => $ts, # or undef
+                data => $mx->get_page_text_by_name_from_f_or_cache ($dump_f, $name)}; # or undef
+      }
+    } else {
+      return $mx->get_page_text_by_name_from_f_or_cache ($dump_f, $name); # or undef
+    }
   } sub {
     if ($@) {
       warn $@;
