@@ -938,3 +938,44 @@ abc
 |   <body>
 |     <p>
 |       "abc"
+
+#data
+{|style="border: none; float:right"
+|-
+|{{hoge
+|color = #0072bc
+}}
+|-
+|{{hoge
+|color = #003d84
+}}
+|}
+#document
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <table>
+|       style="border: none; float:right"
+|       <tbody>
+|         <tr>
+|           <td>
+|             <mw include>
+|               wref="hoge"
+|               "
+| "
+|               <mw iparam>
+|                 name="color"
+|                 "#0072bc
+| "
+|         <tr>
+|           <td>
+|             <mw include>
+|               wref="hoge"
+|               "
+| "
+|               <mw iparam>
+|                 name="color"
+|                 "#003d84
+| "

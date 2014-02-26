@@ -626,7 +626,9 @@ sub parse_char_string ($$$) {
       $set_attrs->($line => $el);
       $open[-1]->append_child ($el);
       push @open, $el;
-    } elsif ($in_table and $line =~ s/^\s*\|\+\s*//) {
+    } elsif ($in_table and
+             not ({include => 1, iparam => 1}->{$open[-1]->local_name}) and
+             $line =~ s/^\s*\|\+\s*//) {
       pop @open while not $open[-1]->local_name eq 'table';
       my $el = $doc->create_element ('caption');
       if ($line =~ s/^((?>[^|"'<{\[]|"[^"]*"|'[^']*')*)\|(?!\|)\s*//) {
@@ -635,7 +637,9 @@ sub parse_char_string ($$$) {
       $open[-1]->append_child ($el);
       push @open, $el;
       $parse_inline->($line);
-    } elsif ($in_table and $line =~ s/^\s*([|!])\s*//) {
+    } elsif ($in_table and
+             not ({include => 1, iparam => 1}->{$open[-1]->local_name}) and
+             $line =~ s/^\s*([|!])\s*//) {
       my $type = $1 eq '!' ? 'th' : 'td';
       pop @open while not {table => 1, thead => 1, tbody => 1, tfoot => 1,
                            tr => 1, td => 1, th => 1}->{$open[-1]->local_name};
