@@ -1,0 +1,72 @@
+#data
+| {{hoge
+| | foo = <span>bar
+| }}x
+#document
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="hoge"
+|       "
+| "
+|       <mw iparam>
+|         name="foo"
+|         <span>
+|           "bar
+| "
+|     <p>
+|       "x"
+
+#data
+| {{hoge
+| | foo = <span>bar
+| | bar = baz
+| }}
+#document
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="hoge"
+|       "
+| "
+|       <mw iparam>
+|         name="foo"
+|         <span>
+|           "bar
+| "
+|       <mw iparam>
+|         name="bar"
+|         "baz
+| "
+
+#data
+| {{hoge
+| | foo = <span><span>bar
+| | bar = baz
+| }}
+#document
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="hoge"
+|       "
+| "
+|       <mw iparam>
+|         name="foo"
+|         <span>
+|           <span>
+|             "bar
+| "
+|       <mw iparam>
+|         name="bar"
+|         "baz
+| "
