@@ -86,8 +86,38 @@
 |     <table>
 |       <mw include>
 |         wref="hoge"
-|       <p>
-|         "}}"
+|         "
+| 
+| "
+
+#data
+| {|
+| {{hoge
+| |foo=1
+| 
+| |bar=2
+| }}
+| |}
+#document
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <table>
+|       <mw include>
+|         wref="hoge"
+|         "
+| "
+|         <mw iparam>
+|           name="foo"
+|           "1
+| 
+| "
+|         <mw iparam>
+|           name="bar"
+|           "2
+| "
 
 #data
 | {{x

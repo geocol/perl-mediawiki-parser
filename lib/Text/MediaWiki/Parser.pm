@@ -698,7 +698,7 @@ sub parse_char_string ($$$) {
                            td => 1, th => 1}->{$open[-1]->local_name};
       $reset_mode->();
       $open[-1]->append_child ($doc->create_element ('hr'));
-    } elsif ($line =~ /^$/) {
+    } elsif (not $in_include and $line =~ /^$/) {
       pop @open while not {body => 1, section => 1, includeonly => 1, noinclude => 1, table => 1, caption => 1,
                            td => 1, th => 1}->{$open[-1]->local_name};
       $reset_mode->();
