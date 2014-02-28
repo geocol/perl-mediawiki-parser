@@ -70,3 +70,36 @@
 |         name="bar"
 |         "baz
 | "
+
+#data
+| {|
+| {{hoge
+| 
+| }}
+| |}
+#document
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <table>
+|       <mw include>
+|         wref="hoge"
+|       <p>
+|         "}}"
+
+#data
+| {{x
+| {|
+| }}
+| |}
+#document
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="x"
+|       <table>

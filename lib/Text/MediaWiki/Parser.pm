@@ -49,6 +49,16 @@ sub parse_char_string ($$$) {
   my $html = $doc->implementation->create_document->create_element ('div');
   $html->owner_document->manakai_is_html (1);
 
+  my $reset_mode = sub {
+    $in_table = 0;
+    $in_include = 0;
+    for (@open) {
+      my $ln = $_->local_name;
+      $in_table++ if $ln eq 'table';
+      $in_include++ if $ln eq 'include';
+    }
+  }; # $reset_mode
+
   my $set_attrs = sub {
     my ($attrs => $el) = @_;
     if (length $attrs) {
@@ -156,6 +166,7 @@ sub parse_char_string ($$$) {
         push @open, $el;
       } elsif ($data =~ s/^<($HTMLFlowPattern)\b((?>[^>"']|"[^"]*"|'[^']*')*)>//o) {
         pop @open while not {body => 1, section => 1, includeonly => 1, noinclude => 1, table => 1, caption => 1, td => 1, th => 1, li => 1, dt => 1, dd => 1, %$HTMLFlow, p => 0}->{$open[-1]->local_name};
+        $reset_mode->();
         my $el = $doc->create_element ($1);
         $set_attrs->($2 => $el);
         $open[-1]->append_child ($el);
@@ -180,6 +191,7 @@ sub parse_char_string ($$$) {
         }
       } elsif ($data =~ s/^<(gallery|references|source)\b((?>[^>"']|"[^"]*"|'[^']*')*)>//o) {
         pop @open while not {body => 1, section => 1, includeonly => 1, noinclude => 1, table => 1, caption => 1, td => 1, th => 1, li => 1, dt => 1, dd => 1, %$HTMLFlow, p => 0}->{$open[-1]->local_name};
+        $reset_mode->();
         my $el = $doc->create_element_ns (MWNS, 'mw:'.$1);
         my $attrs = $2;
         my $close = $attrs =~ s{/\z}{};
@@ -214,6 +226,7 @@ sub parse_char_string ($$$) {
         $nowiki = qr{</nowiki\s*>};
       } elsif ($data =~ s{^<pre\b((?>[^>"']|"[^"]*"|'[^']*')*)>}{}) {
         pop @open while not {body => 1, section => 1, includeonly => 1, noinclude => 1, table => 1, caption => 1, td => 1, th => 1, li => 1, dt => 1, dd => 1, %$HTMLFlow, p => 0}->{$open[-1]->local_name};
+        $reset_mode->();
         my $el = $doc->create_element ('pre');
         $set_attrs->($1 => $el);
         $el->set_attribute_ns (MWNS, 'mw:nowiki' => '');
@@ -234,6 +247,7 @@ sub parse_char_string ($$$) {
         push @open, $el;
       } elsif ($data =~ s{^</(includeonly|noinclude)>}{}) {
         pop @open while not {body => 1, includeonly => 1, noinclude => 1, table => 1, caption => 1, td => 1, th => 1, li => 1, dt => 1, dd => 1, %$HTMLFlow, p => 0}->{$open[-1]->local_name};
+        $reset_mode->();
         if ($open[-1]->local_name eq $1) {
           pop @open;
         } else {
@@ -284,7 +298,8 @@ sub parse_char_string ($$$) {
         if ($in_include) {
           pop @open while not $open[-1]->local_name eq 'include';
           pop @open; # include
-          $in_include--;
+          #$in_include--;
+          $reset_mode->();
         } elsif ($data =~ s/^\}//) {
           if ($open[-1]->local_name eq 'placeholder') {
             pop @open;
@@ -388,6 +403,7 @@ sub parse_char_string ($$$) {
           push @open, $el;
         } elsif ($in_include) {
           pop @open while not $open[-1]->local_name eq 'include';
+          $reset_mode->();
           $data =~ s/^\s+//;
           my $el = $doc->create_element_ns (MWNS, 'mw:iparam');
           if ($data =~ s/^([^<\{\}\[\]|!\s=]+)\s*=\s*//) {
@@ -506,6 +522,7 @@ sub parse_char_string ($$$) {
                             td => 1, th => 1}->{$open[-1]->local_name} and
                            ($open[-1]->get_user_data ('level') < $level or
                             $open[-1]->get_user_data ('level') == 1));
+      $reset_mode->();
       my $next_level = $open[-1]->get_user_data ('level');
       $next_level++;
       while ($next_level < $level) {
@@ -539,6 +556,7 @@ sub parse_char_string ($$$) {
                             $open[-1]->get_user_data ('level') <= $level) or
                            {body => 1, section => 1, includeonly => 1, noinclude => 1, table => 1, caption => 1,
                             td => 1, th => 1}->{$open[-1]->local_name});
+      $reset_mode->();
       if ({li => 1, dt => 1, dd => 1}->{$open[-1]->local_name} and
           $open[-1]->get_user_data ('level') == $level) {
         pop @open;
@@ -579,6 +597,7 @@ sub parse_char_string ($$$) {
       my $text = $1;
       pop @open while not {body => 1, section => 1, includeonly => 1, noinclude => 1, table => 1, caption => 1,
                            td => 1, th => 1}->{$open[-1]->local_name};
+      $reset_mode->();
       my $el = $doc->create_element_ns (MWNS, 'mw:nowiki');
       $el->set_attribute (pre => '');
       $open[-1]->append_child ($el);
@@ -593,6 +612,7 @@ sub parse_char_string ($$$) {
                            table => 1, caption => 1,
                            td => 1, th => 1,
                            pre => 1}->{$open[-1]->local_name};
+      $reset_mode->();
       unless ($open[-1]->local_name eq 'pre') {
         my $el = $doc->create_element ('pre');
         $open[-1]->append_child ($el);
@@ -614,13 +634,15 @@ sub parse_char_string ($$$) {
       if ($in_table) {
         pop @open while not ($open[-1]->local_name eq 'table');
         pop @open; # table
-        $in_table--;
+        #$in_table--;
+        $reset_mode->();
         $parse_inline->($line);
       } else {
         $parse_inline->($line);
       }
     } elsif ($in_table and $line =~ s/^\s*\|-\s*//) {
       pop @open while not {table => 1, thead => 1, tbody => 1, tfoot => 1}->{$open[-1]->local_name};
+      $reset_mode->();
       if ($open[-1]->local_name eq 'table') {
         my $el = $doc->create_element ('tbody');
         $open[-1]->append_child ($el);
@@ -634,6 +656,7 @@ sub parse_char_string ($$$) {
              not $in_include and
              $line =~ s/^\s*\|\+\s*//) {
       pop @open while not $open[-1]->local_name eq 'table';
+      $reset_mode->();
       my $el = $doc->create_element ('caption');
       if ($line =~ s/^((?>[^|"'<{\[]|"[^"]*"|'[^']*')*)\|(?!\|)\s*//) {
         $set_attrs->($1 => $el);
@@ -647,6 +670,7 @@ sub parse_char_string ($$$) {
       my $type = $1 eq '!' ? 'th' : 'td';
       pop @open while not {table => 1, thead => 1, tbody => 1, tfoot => 1,
                            tr => 1, td => 1, th => 1}->{$open[-1]->local_name};
+      $reset_mode->();
       if ($open[-1]->local_name eq 'td' or
           $open[-1]->local_name eq 'th') {
         pop @open; # td/th
@@ -672,10 +696,12 @@ sub parse_char_string ($$$) {
     } elsif ($line =~ /^----$/) {
       pop @open while not {body => 1, section => 1, includeonly => 1, noinclude => 1, table => 1, caption => 1,
                            td => 1, th => 1}->{$open[-1]->local_name};
+      $reset_mode->();
       $open[-1]->append_child ($doc->create_element ('hr'));
     } elsif ($line =~ /^$/) {
       pop @open while not {body => 1, section => 1, includeonly => 1, noinclude => 1, table => 1, caption => 1,
                            td => 1, th => 1}->{$open[-1]->local_name};
+      $reset_mode->();
       if ($open[-1]->local_name eq 'td' or
           $open[-1]->local_name eq 'th') {
         my $el = $doc->create_element ('p');
@@ -686,6 +712,7 @@ sub parse_char_string ($$$) {
       if ({li => 1, dt => 1, dd => 1, pre => 1}->{$open[-1]->local_name}) {
         pop @open while not {body => 1, section => 1, includeonly => 1, noinclude => 1, table => 1,
                              td => 1, th => 1}->{$open[-1]->local_name};
+        $reset_mode->();
       }
       $parse_inline->("\x0A" . $line);
     }
