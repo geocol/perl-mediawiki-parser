@@ -133,3 +133,36 @@
 |     <mw include>
 |       wref="x"
 |       <table>
+
+#data
+{{hoge
+|aa=
+* foo
+* bar
+|bb=x
+}}x
+#document
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="hoge"
+|       "
+| "
+|       <mw iparam>
+|         name="aa"
+|         <ul>
+|           <li>
+|             "foo"
+|           <li>
+|             "bar"
+|         "
+| "
+|       <mw iparam>
+|         name="bb"
+|         "x
+| "
+|     <p>
+|       "x"
