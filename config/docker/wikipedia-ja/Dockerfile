@@ -4,7 +4,7 @@ RUN apt-get update
 RUN apt-get -y install perl wget git bzip2 make gcc tar
 
 RUN git clone git://github.com/geocol/perl-mediawiki-parser
-RUN cd perl-mediawiki-parser && make deps PMBP_OPTIONS=--execute-system-package-installer
+RUN cd perl-mediawiki-parser && PMBP_DUMP_BEFORE_DIE=1 make deps PMBP_OPTIONS=--execute-system-package-installer
 ADD server.sh server
 RUN chmod u+x /server
 
