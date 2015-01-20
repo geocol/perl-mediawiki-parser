@@ -1,11 +1,10 @@
-# -*- Makefile -*-
-
 all:
 
 ## ------ Setup ------
 
 WGET = wget
 GIT = git
+PMBP_OPTIONS=
 
 deps: git-submodules pmbp-install
 
@@ -16,11 +15,11 @@ local/bin/pmbp.pl:
 	mkdir -p local/bin
 	$(WGET) -O $@ https://raw.github.com/wakaba/perl-setupenv/master/bin/pmbp.pl
 pmbp-upgrade: local/bin/pmbp.pl
-	perl local/bin/pmbp.pl --update-pmbp-pl
+	perl local/bin/pmbp.pl $(PMBP_OPTIONS) --update-pmbp-pl
 pmbp-update: git-submodules pmbp-upgrade
-	perl local/bin/pmbp.pl --update
+	perl local/bin/pmbp.pl $(PMBP_OPTIONS) --update
 pmbp-install: pmbp-upgrade
-	perl local/bin/pmbp.pl --install
+	perl local/bin/pmbp.pl $(PMBP_OPTIONS) --install
 
 ## ------ Tests ------
 
