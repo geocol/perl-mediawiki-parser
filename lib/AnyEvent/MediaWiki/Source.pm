@@ -9,11 +9,11 @@ use Web::HTML::Parser;
 use Web::DOM::Document;
 
 sub new_wikipedia_by_lang ($$) {
-  return bless {top_url => 'http://' . $_[1] . '.wikipedia.org/'}, $_[0];
+  return bless {top_url => 'https://' . $_[1] . '.wikipedia.org/'}, $_[0];
 } # new_wikipedia_by_lang
 
 sub new_wiktionary_by_lang ($$) {
-  return bless {top_url => 'http://' . $_[1] . '.wiktionary.org/'}, $_[0];
+  return bless {top_url => 'https://' . $_[1] . '.wiktionary.org/'}, $_[0];
 } # new_wiktionary_by_lang
 
 sub new_from_dump_f_and_cache_d ($$$) {
