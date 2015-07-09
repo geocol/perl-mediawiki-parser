@@ -4,6 +4,7 @@ use warnings;
 use AnyEvent;
 use AnyEvent::Util qw(fork_call);
 use URL::PercentEncode qw(percent_encode_c);
+use JSON::Functions::XS qw(json_bytes2perl);
 use Web::UserAgent::Functions qw(http_get);
 use Web::HTML::Parser;
 use Web::DOM::Document;
@@ -100,5 +101,36 @@ sub _get_source_text_by_name_as_cv_from_dump ($$;%) {
 
   return $cv;
 } # _get_source_text_by_name_as_cv_from_dump
+
+sub get_category_members_by_http_as_cv ($$;%) {
+  my ($self, $name, %args) = @_;
+  my $url = $self->top_url;
+  $url .= '/' unless $url =~ m{/\z};
+  $url .= q<w/api.php>;
+
+  my $cv = AE::cv;
+  http_get
+      url => $url,
+      params => {
+        action => 'query',
+        list => 'categorymembers',
+        cmtitle => $name,
+        cmlimit => 500,
+        format => 'json',
+      },
+      timeout => 100,
+      anyevent => 1,
+      cb => sub {
+        my (undef, $res) = @_;
+        unless ($res->is_success) {
+          $cv->send (undef);
+          return;
+        }
+
+        my $json = json_bytes2perl $res->content;
+        $cv->send (eval { $json->{query}->{categorymembers} } || []);
+      };
+  return $cv;
+} # get_category_members_by_http_as_cv
 
 1;
