@@ -269,7 +269,7 @@ sub parse_char_string ($$$) {
         $open[-1]->append_child ($el);
         push @open, $el;
         $nowiki = qr{-->};
-      } elsif ($data =~ s/^\{\{//) {
+      } elsif ($data =~ s/^\{\{//) { # {{...}}
         if ($data =~ s/^([A-Z]+|(?!(?:subst|safesubst|msgnw):)[a-z]+|#[a-z]+):\s*//) {
           my $el = $doc->create_element_ns (MWNS, 'mw:include');
           $el->set_attribute (wref => $1);
@@ -287,7 +287,7 @@ sub parse_char_string ($$$) {
           $open[-1]->append_child ($el);
           push @open, $el;
           $in_include++;
-        } elsif ($data =~ s/^\{([^{}|]+)//) {
+        } elsif ($data =~ s/^\{([^{}|]+)//) { # {{{...}}}
           my $el = $doc->create_element_ns (MWNS, 'mw:placeholder');
           $el->set_attribute (name => $1);
           $open[-1]->append_child ($el);
@@ -305,10 +305,14 @@ sub parse_char_string ($$$) {
         }
       } elsif ($data =~ s/^\}\}//) {
         if ($in_include) {
-          pop @open while not $open[-1]->local_name eq 'include';
-          pop @open; # include
-          #$in_include--;
-          $reset_mode->();
+          if ($data =~ s/^\}// and $open[-1]->local_name eq 'placeholder') {
+            pop @open;
+          } else {
+            pop @open while not $open[-1]->local_name eq 'include';
+            pop @open; # include
+            #$in_include--;
+            $reset_mode->();
+          }
         } elsif ($data =~ s/^\}//) {
           if ($open[-1]->local_name eq 'placeholder') {
             pop @open;

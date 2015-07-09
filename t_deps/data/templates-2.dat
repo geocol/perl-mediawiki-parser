@@ -83,3 +83,38 @@
 |       "|]]"
 |     <p>
 |       "x"
+
+#data
+{{Foo|ab={{{b}}}|cd=}}
+#document escaped
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="Foo"
+|       <mw iparam>
+|         name="ab"
+|         <mw placeholder>
+|           name="b"
+|       <mw iparam>
+|         name="cd"
+
+#data
+{{Foo|ab={{{b|cd}}}|cd=}}
+#document escaped
+| <html>
+|   xmlns mw="http://suikawiki.org/n/mw"
+|   xmlns xmlns="http://www.w3.org/1999/xhtml"
+|   <head>
+|   <body>
+|     <mw include>
+|       wref="Foo"
+|       <mw iparam>
+|         name="ab"
+|         <mw placeholder>
+|           name="b"
+|           "cd"
+|       <mw iparam>
+|         name="cd"
