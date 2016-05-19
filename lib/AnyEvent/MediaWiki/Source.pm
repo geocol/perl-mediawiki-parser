@@ -41,7 +41,7 @@ sub _get_source_text_by_name_as_cv_by_http ($$;%) {
   my ($self, $name, %args) = @_;
   my $url = $self->top_url;
   $url .= '/' unless $url =~ m{/\z};
-  $url .= q<w/index.php?title=>.(percent_encode_c $name).q<&action=edit>,
+  $url .= q<w/index.php?title=>.(percent_encode_c $name).q<&action=edit&venoscript=1>,
 
   my $cv = AE::cv;
   http_get
