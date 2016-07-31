@@ -19,13 +19,18 @@ Usage:
   $ curl http://localhost:5000/fr/xml?name=Wiki
   $ curl http://localhost:5000/ja/abstract?name=Wikipeida
 
+or:
+
+  $ docker run -p 8080:8080 quay.io/geocol/wpserver
+  $ curl http://localhost:8080/en/text?name=Wikipedia
+
 * Author
 
 Wakaba <wakaba@suikawiki.org>.
 
 * License
 
-Copyright 2010-2014 Wakaba <wakaba@suikawiki.org>.
+Copyright 2010-2016 Wakaba <wakaba@suikawiki.org>.
 
 Copyright 2014 Hatena <http://hatenacorp.jp/>.
 
