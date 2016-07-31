@@ -34,13 +34,6 @@ sub _parse ($$) {
   return $doc;
 } # _parse
 
-sub _url ($$) {
-  return join '',
-      (map { '/' . percent_encode_c $_ } @{$_[0]}),
-      '?',
-      'name=' . percent_encode_c $_[1];
-} # _url
-
 sub _name ($) {
   my $s = shift;
   $s =~ s/\A\s+//;
@@ -93,7 +86,9 @@ return sub {
               my $x = MWDOM::Extractor->new_from_document ($doc);
               my $r = $x->redirect_wref;
               if (defined $r) {
-                $app->send_redirect (_url [$path->[0], $path->[1]], $r->name);
+                $app->http->set_status (302, reason_phrase => 'Page redirected');
+                $app->http->set_response_header (Location => 'abstract?name=' . percent_encode_c $r->name);
+                $app->http->close_response_body;
               } else {
                 $app->send_plain_text ($x->abstract_text // '');
               }
@@ -102,7 +97,9 @@ return sub {
               my $x = MWDOM::Extractor->new_from_document ($doc);
               my $r = $x->redirect_wref;
               if (defined $r) {
-                $app->send_redirect (_url [$path->[0], $path->[1]], $r->name);
+                $app->http->set_status (302, reason_phrase => 'Page redirected');
+                $app->http->set_response_header (Location => 'defs?name=' . percent_encode_c $r->name);
+                $app->http->close_response_body;
               } else {
                 $app->send_plain_text (join "\x0A", @{$x->dict_defs});
               }
