@@ -78,8 +78,8 @@ return sub {
           defined $path->[1] and $path->[1] =~ /\A(?:text|xml|abstract|defs)\z/ and
           not defined $path->[2]) {
         # /{wikikey}/{format}?name={page}
-        my $name = _name $app->text_param ('name') // '';
-        my $wp = _wp $path->[0] or $app->throw_error (404);
+        my $name = _name ($app->text_param ('name') // '');
+        my $wp = _wp $path->[0] or $app->throw_error (404, reason_phrase => 'Unknown wiki');
         $wp->get_source_text_by_name_as_cv ($name)->cb (sub {
           my $text = $_[0]->recv;
           if (defined $text) {
@@ -110,13 +110,13 @@ return sub {
               $app->send_plain_text ($text);
             }
           } else {
-            $app->send_error (404);
+            $app->send_error (404, reason_phrase => 'Page not found');
           }
         });
         return $app->throw;
       }
 
-      return $app->throw_error (404);
+      return $app->throw_error (404, reason_phrase => 'Bad path');
     });
   });
 };

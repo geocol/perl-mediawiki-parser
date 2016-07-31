@@ -15,9 +15,9 @@ Usage:
 
   $ make deps
   $ ./plackup -s Twiggy::Prefork bin/server.psgi
-  $ curl http://localhost:5000/en/text?name=Wikipeida
+  $ curl http://localhost:5000/en/text?name=Wikipedia
   $ curl http://localhost:5000/fr/xml?name=Wiki
-  $ curl http://localhost:5000/ja/abstract?name=Wikipeida
+  $ curl http://localhost:5000/ja/abstract?name=Wikipedia
 
 or:
 
