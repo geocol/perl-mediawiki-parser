@@ -6,7 +6,7 @@ PERL = ./perl
 data-ja:
 	mkdir -p local/wpserver/download local/wpserver/xml
 	$(WGET) -O local/wpserver/download/jawiki-latest-pages-meta-current.xml.bz2 \
-            http://download.wikimedia.org/jawiki/latest/jawiki-latest-pages-meta-current.xml.bz2
+            https://download.wikimedia.org/jawiki/latest/jawiki-latest-pages-meta-current.xml.bz2
 	bzcat local/wpserver/download/jawiki-latest-pages-meta-current.xml.bz2 \
             > local/wpserver/download/ja.xml
 	mv local/wpserver/download/ja.xml local/wpserver/xml/ja.xml
