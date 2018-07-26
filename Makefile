@@ -1,3 +1,5 @@
+CURL = curl
+
 all:
 
 updatenightly: local/bin/pmbp.pl updatedata
@@ -5,6 +7,7 @@ updatenightly: local/bin/pmbp.pl updatedata
 	git add modules t_deps/modules
 	perl local/bin/pmbp.pl --update
 	git add config
+	$(CURL) -sSLf https://raw.githubusercontent.com/wakaba/ciconfig/master/ciconfig | RUN_GIT=1 REMOVE_UNUSED=1 perl
 
 ## ------ Setup ------
 
